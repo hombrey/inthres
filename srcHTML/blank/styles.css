@@ -1,0 +1,28 @@
+/*{{{element selector*/
+body {
+    background-color: transparent;
+}
+        /*}}}element selector*/
+
+/*{{{class selector*/
+.fullPage {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    height: 100vh;
+    width: 100vw;
+    margin: auto;
+    overflow-x: hidden;
+} /*fullPage*/
+/*}}}class*/
+
+.selectBox {
+    position: fixed;
+    overflow-x: hidden;
+    top: 0px;
+    left: 0px;
+} /*.selectBox*/
+
+/*{{{id selector*/
+
+/*}}}id selector*/
