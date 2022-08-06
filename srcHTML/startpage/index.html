@@ -105,21 +105,6 @@
 
     <script>
         document.getElementById("selectbox").focus();
-        window.addEventListener("keydown", evalKeyDown, false); //capture keypress on bubbling (false) phase
-
-        function evalKeyDown(evnt) {
-            let keyPressed = evnt.keyCode;
-            let rateIncValue = 0.2;
-            //console.log ("keyUp: ",keyPressed);
-            switch (keyPressed) {
-                case 27 : parent.focus(); break; //key: Escape --This gives control back to reveal.js when in an iframe 
-                default : return;
-            } //switch (keyPressed)
-        } //evalKey(event)
-
-        function openNewTab(urlvalue){
-                window.open(urlvalue,'_blank');
-        }//function openNewTab
     </script>
 </div> <!-- gridbox -->
 </body> 

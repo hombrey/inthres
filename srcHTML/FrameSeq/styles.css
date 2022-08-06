@@ -22,12 +22,14 @@ select:focus {
 
 .hiddenTool {
     /*opacity: 0.0;*/
-    bottom: -20vh;
+    visibility: hidden;
+    /*bottom: -20vh;*/
 } /*hiddenTool*/
 
 .unhiddenTool {
     /*opacity: 1.0;*/
-    bottom: 1vh;
+    visibility: visble;
+    /*bottom: 1vh;*/
 } /*unhiddenTool*/
 
 .canvasTap {
@@ -61,13 +63,14 @@ select:focus {
 } /*subframe*/
 
 .stroke-color {
-    
      width: 2vw;
      height: 2vw;
      display: inline-block;
      border-radius: 50%;
      border: 1px solid black;
-    
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(-0deg);
+    transform: rotate(90deg);
 } /*stroke-color*/
 
 /*}}}class*/
@@ -110,9 +113,13 @@ select:focus {
  
 #pentool {
     z-index: 4;
+    -webkit-transform: rotate(-90deg);
+    -moz-transform: rotate(-90deg);
+    transform: rotate(-90deg);
     position: fixed;
-    /*bottom: 1vh;*/
-    right:0.5vw;
+    border-radius: 30%;
+    right: -2vw;
+    bottom: 10vh;
     height : 5.7vw;
     width : 10.5vw;
     background: #00000044;
@@ -158,8 +165,8 @@ select:focus {
     /*-webkit-appearance: slider-vertical;*/
     position: absolute;
     top: 4.2vw;
-    left: 0.0vw;
-    width: 10.5vw;
+    left: 1.0vw;
+    width: 8.5vw;
     height: 1.5vw;
 } /*slider*/
 #myBody {

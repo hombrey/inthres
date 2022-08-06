@@ -38,7 +38,7 @@ echo "   </select>" >> 0_FrameX.html
 echo "    <!--}}}outerFrame-->" >> 0_FrameX.html
 
 echo "    <select id=\"seqSelect\" onChange=\"setSeqSource()\" size=1> " >> 0_FrameX.html
-echo "        <option value=\"$SOURCEROOT/startpage/index.html\">startPage</option> " >> 0_FrameX.html
+echo "        <option value=\"$SOURCEROOT/startpage/index.html\">0_startPage</option> " >> 0_FrameX.html
 echo "" >> 0_FrameX.html
 
 #list html files in lesson plan root directory

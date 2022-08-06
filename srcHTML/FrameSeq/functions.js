@@ -47,13 +47,14 @@ function evalKeyDown(evnt) {
     //console.log ("keyUp: ",keyPressed);
     switch (keyPressed) {
        case 87  : focusIframe(); break; //key: w
+       case 82  : window.location.reload(); break; //key: r
         default : return;
     } //switch (keyPressed)
 } //evalKey(event)
 
 function drawKeys(evnt) {
     let keyPressed = evnt.keyCode;
-    console.log ("draw keyUp: ",keyPressed);
+    //console.log ("draw keyUp: ",keyPressed);
     switch (keyPressed) {
        case 67  : Clear(); break; //key: c
        case 90  : Restore(); break; //key: z
@@ -134,6 +135,7 @@ async function initWin() {
         const inputC = document.createElement('input');
         inputC.setAttribute('id','slider');
         inputC.setAttribute('type','range');
+        inputC.setAttribute('value','2');
         inputC.setAttribute('min','1');
         inputC.setAttribute('max','100');
         inputC.setAttribute('oninput','stroke_width = this.value');
@@ -154,6 +156,10 @@ async function initWin() {
     stroke_color = 'black';
     stroke_width = "2";
     is_drawing = false;
+
+    //prevent a-z keyboard strokes from selecting another iframe  
+    let selectHandle = document.getElementById("seqSelect");
+    selectHandle.setAttribute ('onkeydown','IgnoreAlpha(event);');
 
 } //function initWin()
 
@@ -181,11 +187,11 @@ function focusIframe() {
 
 function toggleShowColors() {
     if (IsColorPaneHidden) {
-        console.log ("show pane");
+        //console.log ("show pane");
         document.getElementById("pentool").className = "unhiddenTool";
         IsColorPaneHidden=false;
     } else {
-        console.log ("hide pane");
+        //console.log ("hide pane");
         document.getElementById("pentool").className = "hiddenTool";
         IsColorPaneHidden=true;
     } //if hideColorPane
@@ -269,6 +275,11 @@ function Clear() {
 // }}} draw functions
 
 //{{{helper functions
+function IgnoreAlpha(e) {
+  if (!e) { e = window.event; }
+  if (e.keyCode >= 65 && e.keyCode <= 90) // A to Z
+    { e.returnValue = false; e.cancel = true; }
+} //function IgnoreAlpha(e)
 
 function insertCss( code ) {
     var style = document.createElement('style');
