@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../srcHTML/vidPicker/vertstyle.css">
+</head>
+
+<body id="myBody">
+    <img class="fullPage" id="backgroundX" src="../srcHTML/vidPicker/img/BG0.png">
+    <video src="../srcHTML/vidPicker/img/init.mp4" id="vidPicked" onmouseover="initVidPlayer(this.id)"></video>
+    <div id="directory" style="display:none">./</div>
+    <div id="pickerDiv" class="selector">
+    <select id="filePicker" onchange="switchVid(this.id,directory.id)" size=3>  <!--Call run() function-->
+        <option>1_IsPollyInOnOrUnderX.mp4</option>
+        <option>2_countGame_1sec.mp4</option>
+        <option>3_singleFrameCircles.webm</option>
+    </select>
+    </div>
+</body> 
+    <script src="../srcHTML/vidPicker/functions.js"></script> 
+</html> 

@@ -1,0 +1,43 @@
+    <!--{{{head-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="./srcHTML/FrameSeq/functions.js"></script> 
+    <script type="text/javascript">
+        function setSeqSource() {
+            var theSelect = document.getElementById('seqSelect');
+            var theIframe = document.getElementById('myIframe');
+            var theUrl;
+            theUrl = theSelect.options[theSelect.selectedIndex].value;
+            theIframe.src = theUrl;
+        }
+        function setToolSource(urlvalue) {
+            window.open(urlvalue,'_blank');
+        }
+    </script>
+    <link rel="stylesheet" href="./srcHTML/FrameSeq/styles.css">
+</head>
+    <!--}}}head-->
+<body>
+    <!--{{{outerFrame-->
+ <img class="fullPage" id="backgroundX" src="./srcHTML/FrameSeq/background.jpg">
+ <iframe class="subframe" id="myIframe" src="./10_vidSet/x_horiz.html"></iframe>
+
+    <select id="toolSelect" onClick="setToolSource(this.value)" size=1 autofocus> 
+      <option value="./srcHTML/Klyne/klyne.html">Klyne</option> 
+      <option value="./">localDir</option> 
+   </select>
+    <!--}}}outerFrame-->
+    <select id="seqSelect" onChange="setSeqSource()" size=1> 
+        <option value="./srcHTML/Klyne/klyne.html">9_classMgt</option> 
+
+        <option value="./10_vidSet/x_horiz.html">10_vidSet</option> 
+        <option value="./10_vidSet/x_vert.html">10_vidSet</option> 
+        <option value="./30_PeepSet/xPeepWave.html">30_PeepSet</option> 
+        <option value="./40_choiceSet/x_choose.html">40_choiceSet</option> 
+        <option value="./50_pickPlaceSet/x_Pick.html">50_pickPlaceSet</option> 
+
+        <option value="../../../Songs/Z_bye/x_horiz.html">27_Bye</option>
+   </select>
+</body>
+</html>

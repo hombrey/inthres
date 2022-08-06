@@ -5,13 +5,109 @@
     <title></title> 
     <meta name="description" content"">
     <meta name="author" content="Hombrey">
-    <link rel="stylesheet" href="../src/PickPlace/styles.css">
+    <link rel="stylesheet" href="../srcHTML/PickPlace/styles.css">
 </head>
 
 <body id="myBody">
-    <div id="srcdir" style="display:none;">../src/PickPlace/</div>
+    <div id="srcdir" style="display:none;">../srcHTML/PickPlace/</div>
     <div id="assetdir" style="display:none">./</div>
 
-    <img class="fullPage" id="backgroundX" src="../src/PickPlace/img/BG0.png">
+    <img class="fullPage" id="backgroundX" src="../srcHTML/PickPlace/img/BG0.png">
     <select class="selectBox" id="dummy"><option>PickAndPlace</option></select>
-    <script src="../src/PickPlace/functions.js"></script> 
+    <script src="../srcHTML/PickPlace/functions.js"></script> 
+
+    <img class="fullPage"   id="placemat"                             src="./mat.png">
+    <img class="pieceClass" id="piece1" onClick="clickPiece(this.id)" src="./1.png">
+    <img class="pieceClass" id="piece2" onClick="clickPiece(this.id)" src="./2.png">
+    <img class="pieceClass" id="piece3" onClick="clickPiece(this.id)" src="./3.png">
+    <img class="pieceClass" id="piece4" onClick="clickPiece(this.id)" src="./4.png">
+    <img class="pieceClass" id="piece5" onClick="clickPiece(this.id)" src="./5.png">
+    <img class="pieceClass" id="piece6" onClick="clickPiece(this.id)" src="./6.png">
+    <script>
+
+        //{{{eval keys
+        function evalKeyDown(evnt) {
+            let keyPressed = evnt.keyCode;
+            //console.log ("Pressed:", keyPressed);
+            switch (keyPressed) {
+               case 190 : evnt.preventDefault(); movePiece(); break;//key: period
+                case 49 : if(!event.shiftKey) selectPiece(1); 
+                        else placePiece(1);
+                        break; //key: 1
+                case 50 : if(!event.shiftKey) selectPiece(2); 
+                        else placePiece(2);
+                        break; //key: 2
+                case 51 : if(!event.shiftKey) selectPiece(3); 
+                        else placePiece(3);
+                        break; //key: 3
+                case 52 : if(!event.shiftKey) selectPiece(4); 
+                        else placePiece(4);
+                        break; //key: 4
+                case 53 : if(!event.shiftKey) selectPiece(5); 
+                        else placePiece(5);
+                        break; //key: 5
+                case 54 : if(!event.shiftKey) selectPiece(6); 
+                        else placePiece(6);
+                        break; //key: 6
+                case 39 : rotatePiece(90);break;
+                case 37 : rotatePiece(-90);break;
+                case 80 : if(!event.shiftKey) resetPiece(pickedNum); 
+                        else resetAll();
+                        break;//key: p
+            case 188 : if(!event.shiftKey) toggleHide(); 
+                        else  hideAll(); 
+                        break;//key: <comma>
+            case  32 : evnt.preventDefault(); playPrompt(); break;//key: <spacebar>
+            case  8 : parent.focus(); break; //key: Escape --This gives control back to reveal.js when in an iframe 
+                default : return;
+            } //switch (keyPressed)
+        } //evalKey(event)
+        function evalKeyUp(evnt) {
+            let keyPressed = evnt.keyCode;
+            if (keyPressed==190) leavePiece(); //key: period
+        } //evalKey(event)
+        //}}}eval keys
+
+        //{{{ pick place and audio of pieces
+        function placeLocations() {
+            pieces = [document.getElementById('piece1'),document.getElementById('piece2'),
+                      document.getElementById('piece3'),document.getElementById('piece4'),
+                      document.getElementById('piece5'),document.getElementById('piece6')
+            ]; //pieces =[]
+
+            pieces[1-1].pickX = 1026; pieces[1-1].placeX = 349;
+            pieces[1-1].pickY = 426;  pieces[1-1].placeY = 15;
+            pieces[1-1].angle = 0;
+            pieces[1-1].prompt = new sound(assetDir+"wav/prompt1.mp3");
+
+            pieces[2-1].pickX = 30;  pieces[2-1].placeX = 551;
+            pieces[2-1].pickY = 441; pieces[2-1].placeY = 15;
+            pieces[2-1].angle = 0;
+            pieces[2-1].prompt = new sound(assetDir+"wav/prompt2.mp3");
+
+            pieces[3-1].pickX = 10; pieces[3-1].placeX = 703;
+            pieces[3-1].pickY = 31; pieces[3-1].placeY = 15;
+            pieces[3-1].angle = 0;
+            pieces[3-1].prompt = new sound(assetDir+"wav/prompt3.mp3");
+
+            pieces[4-1].pickX = 736; pieces[4-1].placeX = 349;
+            pieces[4-1].pickY = 482; pieces[4-1].placeY = 237;
+            pieces[4-1].angle = 0;
+            pieces[4-1].prompt = new sound(assetDir+"wav/prompt4.mp3");
+
+            pieces[5-1].pickX = 365; pieces[5-1].placeX = 551;
+            pieces[5-1].pickY = 475; pieces[5-1].placeY = 237;
+            pieces[5-1].angle = 0;
+            pieces[5-1].prompt = new sound(assetDir+"wav/prompt5.mp3");
+
+            pieces[6-1].pickX = 1019; pieces[6-1].placeX = 703;  
+            pieces[6-1].pickY = 12;   pieces[6-1].placeY = 237;  
+            pieces[6-1].angle = 0;
+            pieces[6-1].prompt = new sound(assetDir+"wav/prompt6.mp3");
+
+        } //function placePieces
+        //}}} pick place and audio of pieces
+
+    </script>
+</body> 
+</html> 
