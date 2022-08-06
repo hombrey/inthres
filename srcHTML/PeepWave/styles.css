@@ -1,0 +1,56 @@
+/*{{{element selector*/
+body {
+    /*background-color: black;*/
+}
+        /*}}}element selector*/
+
+/*{{{class selector*/
+.fullPage {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    height: 100vh;
+    width: 100vw;
+    margin: auto;
+    overflow-x: hidden;
+} /*fullPage*/
+.canvasClass {
+    position: fixed;
+    top:0vh;
+    left:0vw;
+    border:2px solid;
+    margin: auto;
+    display: none;
+    oxverflow-x: hidden;
+} /*canvas*/
+.selectBox {
+    position: fixed;
+    overflow-x: hidden;
+    top: 0px;
+    left: 0px;
+} /*.selectBox*/
+/*}}}class*/
+
+/*{{{id selector*/
+
+#pauseIndicator{
+    position: fixed;
+    bottom: 0vh;
+    left: 10vw;
+    width: 80vw;
+    height: 2vh;
+    z-index: 3;
+    display: none;
+    opacity: 0.2;
+} /* pauseIcon */
+#myBody {
+
+} /*#myBody*/
+
+#backgroundX {
+
+} /*#backgroundX*/
+
+
+
+/*}}}id selector*/

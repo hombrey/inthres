@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- {{{head -->
+<head>
+    <meta charset="UTF-8">
+    <title></title> 
+    <meta name="description" content"">
+    <meta name="author" content="Hombrey">
+    <style>
+        .fillDiv {height: 45vh;}
+        .fullPage {
+            position: fixed;
+            top: 0px; left: 0px;
+            height: 100vh; width: 100vw;
+            margin: auto;
+            overflow-x: hidden;
+            z-index: 0;
+        } /*fullPage*/
+        .gridbox {
+            position: fixed;
+            top: 0px; left: 0px;
+            display:grid;
+            /*grid-template-columns: 1fr 1fr;*/
+            grid-template-columns: 50vw 50vw;
+            grid-template-rows: 5vh 45vh 45vh;
+            overflow-x: hidden;
+            overflow-y: hidden;
+            justify-items: center;
+            z-index:2;
+        } /*gridbox*/
+        #drivebox { grid-row: 2;  grid-column: 1; 
+                    align-self: center; 
+        }/*drivebox*/
+        #dojobox  { grid-row: 2;  grid-column: 2; 
+                    align-self: center;
+        } /*dojobox*/
+        #imagebox { grid-row: 3;  grid-column: 1; 
+                    align-self: center;
+        } /*imagebox*/
+        #tubebox  { grid-row: 3;  grid-column: 2; 
+                    align-self: center;
+        } /*tubebox*/
+        #selectbox {grid-row: 1;  grid-column: span 2;
+                    align-self: center;
+                    font-size: 1.5em;
+                    font-family: sans-serif;
+        } /*selectbox*/
+    </style>
+    <script>
+        window.addEventListener("keydown", evalKeyDown2, false); //capture keypress on bubbling (false) phase
+        function evalKeyDown2(evnt) {
+            let keyPressed = evnt.keyCode;
+            console.log ("Pressed2:", keyPressed);
+            switch (keyPressed) {
+            case 87  : if(!event.shiftKey) parent.postMessage("FocusSeq","*");
+                        else parent.postMessage("FocusTool","*"); 
+                        break; //key: w
+                default : return;
+            } //switch (keyPressed)
+        } //evalKey(event)
+
+        window.addEventListener('message', evalMessage);
+        function evalMessage (evnt) {
+            // Get the sent data
+            var data = evnt.data;
+            //console.log ("message received");
+
+            if (data == "FocusIframe") {
+                //console.log("focusDummy");
+                document.getElementById('selectbox').focus();
+            }
+        } //function evalMessage(event)
+    </script>
+</head>
+<!-- }}}head -->
+
+<!-- {{{body -->
+<body id="myBody">
+<img class="fullPage" id="backgroundX" src="./BG0.jpg">
+<div class="gridbox">
+    <select id="selectbox" name="" onclick="openNewTab(this.value)">
+        <option value="./start.html" selected></option>
+        <option value="https://drive.google.com/" >gdrive</option>
+        <option value="https://www.classdojo.com/">cdojo</option>
+        <option value="https://images.google.com/">gImages</option>
+        <option value="https://www.youtube.com/">youtube</option>
+    </select>
+
+    <a HREF="https://drive.google.com" target="_blank" >
+        <img class="fillDiv" id="drivebox" src="./1_googleDrive.png">
+    </a> <!-- google.com -->
+
+    <a HREF="https://www.classdojo.com" target="_blank" >
+        <img class="fillDiv" id="dojobox" src="./2_classDojo.png">
+    </a> <!-- classdojo.com -->
+
+    <a HREF="https://images.google.com" target="_blank" >
+        <img class="fillDiv" id="imagebox" src="./3_googleImages.png">
+    </a> <!-- images.google.com -->
+
+    <a HREF="https://www.youtube.com" target="_blank" >
+        <img class="fillDiv" id="tubebox" src="./4_youtube.png">
+    </a> <!-- youtube.com -->
+
+    <script>
+        document.getElementById("selectbox").focus();
+        window.addEventListener("keydown", evalKeyDown, false); //capture keypress on bubbling (false) phase
+
+        function evalKeyDown(evnt) {
+            let keyPressed = evnt.keyCode;
+            let rateIncValue = 0.2;
+            //console.log ("keyUp: ",keyPressed);
+            switch (keyPressed) {
+                case 27 : parent.focus(); break; //key: Escape --This gives control back to reveal.js when in an iframe 
+                default : return;
+            } //switch (keyPressed)
+        } //evalKey(event)
+
+        function openNewTab(urlvalue){
+                window.open(urlvalue,'_blank');
+        }//function openNewTab
+    </script>
+</div> <!-- gridbox -->
+</body> 
+<!-- }}}body -->
+
+</html> 

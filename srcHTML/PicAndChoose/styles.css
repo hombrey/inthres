@@ -1,0 +1,105 @@
+/*{{{element selector*/
+body {
+    /*background-color: black;*/
+}
+        /*}}}element selector*/
+
+/*{{{class selector*/
+.fullPage {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    height: 100vh;
+    width: 100vw;
+    margin: auto;
+    overflow-x: hidden;
+    z-index: 0;
+} /*fullPage*/
+
+.selectBox {
+    position: fixed;
+    overflow-x: hidden;
+    top: 2vh;
+    left: 50vw;
+    z-index:0;
+} /*.selectBox*/
+
+.grid3{
+    display:grid;
+    grid-template-columns: 12vw 80vw 12vw;
+    grid-template-rows: 98vh;
+    justify-content: center; /*align whole on horiz center*/
+    /*align-content: center;*/
+    overflow-x: hidden;
+    overflow-y: hidden;
+    z-index:1;
+}/*grid3*/
+.grid3-left{
+    grid-column: 1;
+    grid-row: 1;
+}/*grid3-left*/
+
+.grid3-right{
+    grid-column: 3;
+    grid-row: 1;
+}/*grid3-right*/
+
+.grid3-center{
+    /*border: 1px solid rgba(0, 0, 0, 0.8);*/
+    grid-column: 2;
+    grid-row: 1;
+    align-self: center;
+    justify-self: center;
+    z-index:1;
+}/*grid3-center*/
+
+.choices {
+    position: fixed;
+    height: 15vh;
+    width: 15vw;
+    margin: auto;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    cursor: move;
+    transition:  250ms;
+    z-index:2;
+} /*choicePage*/
+.chosen{
+    top: 43vh;
+    left: 43vw;
+} /*chosen*/
+.guide{
+    font-family: sans-serif;
+    color: black;
+    opacity: 0.6;
+    position: fixed;
+    font-size: 1.8em;
+}
+/*}}}class*/
+
+/*{{{id selector*/
+#choice1 { top: 1vh;     left:  1vw; }
+#choice2 { top: 1vh;     left:  84vw;}
+#choice3 { top: 84vh;    left:  1vw; }
+#choice4 { top: 84vh;    left:  84vw;}
+#guide1  { top: 16vh;    left:  1vw; display: none;}
+#guide2  { top: 16vh;    right: 1vw; display: none;}
+#guide3  { bottom: 16vh; left:  1vw; display: none;}
+#guide4  { bottom: 16vh; right: 1vw; display: none;}
+
+#mainImg {
+    width: 70%;
+    height: 80%;
+    transition:  150ms;
+} /*#mainImg*/
+#myBody {
+
+} /*#myBody*/
+
+#backgroundX {
+
+} /*#backgroundX*/
+
+
+
+/*}}}id selector*/

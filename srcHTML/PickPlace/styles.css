@@ -1,0 +1,47 @@
+/*{{{element selector*/
+body {
+    /*background-color: black;*/
+}
+        /*}}}element selector*/
+
+/*{{{class selector*/
+.fullPage {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    height: 100vh;
+    width: 100vw;
+    margin: auto;
+    overflow-x: hidden;
+} /*fullPage*/
+.pieceClass {
+    position: fixed;
+    top: 0vh;
+    left: 0vw;
+    height: 10vh;
+    width: 10vw;
+    margin: auto;
+    overflow-x: hidden;
+    cursor: move;
+    transition:  50ms;
+} /*fullPage*/
+.selectBox {
+    position: fixed;
+    overflow-x: hidden;
+    top: 0px;
+    left: 0px;
+} /*.selectBox*/
+/*}}}class*/
+
+/*{{{id selector*/
+#myBody {
+
+} /*#myBody*/
+
+#backgroundX {
+
+} /*#backgroundX*/
+
+
+
+/*}}}id selector*/

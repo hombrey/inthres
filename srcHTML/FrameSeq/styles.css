@@ -1,0 +1,175 @@
+/*{{{element selector*/
+body {
+    /*background-color: black;*/
+}
+select {
+    overflow: auto;
+    color: black;
+    font-size: 1.0em;
+    background-color: rgba(5,5,5,0.0);
+    /*border: 0px;*/
+} /*select*/
+select option {
+	display:inline-block;
+}
+select:focus {
+    background-color: ivory;
+}
+
+/*}}}element selector*/
+
+/*{{{class selector*/
+
+.hiddenTool {
+    /*opacity: 0.0;*/
+    bottom: -20vh;
+} /*hiddenTool*/
+
+.unhiddenTool {
+    /*opacity: 1.0;*/
+    bottom: 1vh;
+} /*unhiddenTool*/
+
+.canvasTap {
+    pointer-events:auto;
+    border: 2px solid black; 
+} /*canvasTap*/
+
+.canvasNoTap {
+    pointer-events:none;
+    border: 2px solid yellow; 
+} /*canvasNoTap*/
+
+.fullPage {
+    z-index: 0;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    height: 100vh;
+    width: 100vw;
+    margin: auto;
+    overflow-x: hidden;
+} /*fullPage*/
+
+.subframe {
+    z-index: 1;
+    position: fixed;
+    top: 3vh;
+    left: 0vw;
+    height: 97vh;
+    width: 100vw;
+} /*subframe*/
+
+.stroke-color {
+    
+     width: 2vw;
+     height: 2vw;
+     display: inline-block;
+     border-radius: 50%;
+     border: 1px solid black;
+    
+} /*stroke-color*/
+
+/*}}}class*/
+
+/*{{{id selector*/
+#seqSelect {
+    z-index: 1;
+    position: fixed;
+    top: 0vh;
+    left: 70vw;
+    height: 3vh;
+    width: 10vw;
+} /*seqSelect*/
+
+#toolSelect {
+    z-index: 1;
+    position: fixed;
+    top: 0vh;
+    left: 20vw;
+    height: 3vh;
+    width: 10vw;
+} /*seqSelect*/
+
+#mainImg {
+    width: 70%;
+    height: 80%;
+    transition:  150ms;
+} /*#mainImg*/
+
+#canvas {
+    z-index: 3;
+    background:transparent;
+    position: fixed;
+    top: 3vh;
+    left: 0vw;
+    height: 97vh;
+    width: 100vw;
+} /*canvas*/
+
+ 
+#pentool {
+    z-index: 4;
+    position: fixed;
+    /*bottom: 1vh;*/
+    right:0.5vw;
+    height : 5.7vw;
+    width : 10.5vw;
+    background: #00000044;
+} /*#pentool*/
+
+#color1{ position: absolute;
+    top: 2.2vw; left: 0vw;
+} /*color1*/
+
+#color2{ position: absolute;
+    top: 0.7vw; left: 1.3vw;
+} /*color1*/
+
+#color3{ position: absolute;
+    top: 1px; left: 3.2vw;
+} /*color1*/
+
+#color4{ position: absolute;
+    top: 1px; left: 5.2vw;
+} /*color1*/
+
+#color5{ position: absolute;
+    top: 0.7vw; left: 7.1vw;
+} /*color1*/
+
+#color6{ position: absolute;
+    top: 2.2vw; left: 8.4vw;
+} /*color1*/
+
+#undoButton{ position: absolute;
+    color:white;
+    background:transparent;
+    top: 2.1vw; left: 3.2vw;
+} /*undo*/
+
+#clearButton{ position: absolute;
+    color:white;
+    background:transparent;
+    top: 2.1vw; left: 5.2vw;
+} /*clear*/
+
+#slider {
+    /*-webkit-appearance: slider-vertical;*/
+    position: absolute;
+    top: 4.2vw;
+    left: 0.0vw;
+    width: 10.5vw;
+    height: 1.5vw;
+} /*slider*/
+#myBody {
+
+} /*#myBody*/
+
+#backgroundX {
+
+} /*#backgroundX*/
+
+
+
+/*}}}id selector*/
