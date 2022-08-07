@@ -48,7 +48,7 @@ function evalKeyDown(evnt) {
                   break; //key: <down>
         case 70 :  if(event.ctrlKey) togglePicFullScreen(evnt); //if (event.ctrlKey)
                    break; // 'f'
-        case  8 : parent.focus(); break; //key: Escape --This gives control back to reveal.js when in an iframe 
+        //case  8 : parent.focus(); break; //key: Escape --This gives control back to reveal.js when in an iframe 
         default : return;
     } //switch (keyPressed)
 } //evalKey(event)
@@ -123,7 +123,7 @@ async function initWin() {
     errSound = new sound(sourceDir+"wav/err.mp3");
     cardSound = new sound(sourceDir+"wav/card.mp3");
 
-    document.getElementById("dummy").focus(); //dummy select element that grabs the focus of the iframe
+    //document.getElementById("dummy").focus(); //dummy select element that grabs the focus of the iframe
 //};//document.getElementById ... wait for element before loading
 } //function initWin()
 

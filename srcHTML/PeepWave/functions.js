@@ -123,7 +123,7 @@ async function initWin() {
     picSet[0].wav = 0;
 
     pauseIndicator = document.getElementById('pauseIndicator');
-    document.getElementById("dummy").focus(); //dummy select element that grabs the focus of the iframe
+    //document.getElementById("dummy").focus(); //dummy select element that grabs the focus of the iframe
 
 } //function initWin()
 

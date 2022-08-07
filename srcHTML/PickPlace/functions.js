@@ -72,7 +72,7 @@ await delay (80);
     
     pickSound = new sound(sourceDir+"wav/pick.mp3");
     cardSound = new sound(sourceDir+"wav/card.mp3");
-    document.getElementById("dummy").focus(); //dummy select element that grabs the focus of the iframe
+    //document.getElementById("dummy").focus(); //dummy select element that grabs the focus of the iframe
 
 //};//document.getElementById(' ... wait for element before loading
 } //function init()

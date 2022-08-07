@@ -14,8 +14,9 @@ video {
 select {
     /*overflow: auto;*/
     color: white;
-    font-size: 1.0em;
+    font-size: 0.9em;
     background-color: rgba(0,0,0,0.0);
+    overflow-y: auto;
     /*border: 0px;*/
 } /*select*/
 
@@ -64,6 +65,7 @@ select {
     left: 35vw;
     height: 7vh;
     width: 30vw;
+    border-radius: 10%;
 
     display: flex;
     justify-content: center;

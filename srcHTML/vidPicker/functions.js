@@ -74,9 +74,9 @@ function evalMessage (evnt) {
 
 //{{{initializations
 
-function initWin() {
-document.getElementById('backgroundX').onload = function () { //wait for element before loading
-setTimeout (function() { //set delay before calculating drawable parameters
+async function initWin() {
+    await delay (20);
+
     //Get a reference to the canvas
     bgX = document.getElementById('backgroundX');
     clickedVid = document.getElementById("vidPicked");
@@ -85,10 +85,9 @@ setTimeout (function() { //set delay before calculating drawable parameters
     scaleX = bgX.clientWidth/bgX.naturalWidth;
     scaleY = bgX.clientHeight/bgX.naturalHeight;
 
-    document.getElementById("filePicker").focus();
+    //document.getElementById("filePicker").focus();
+    //const pickerElement=document.getElementById("filePicker");
 
-}, 3);//setTimeOut (function()
-};//document.getElementById(' ... wait for element before loading
 } //function init()
 
 //}}}window init
@@ -191,5 +190,14 @@ function showOSD(rate) {
         vidOSD = null;
     }, osdTimeout);
 } // function showOSD(rate)
+
+function delay(n) {  
+        n = n || 2000;
+        return new Promise(done => {
+                setTimeout(() => {
+                        done();
+                        }, n);
+            });
+}//function delay()
 
 //}}}helper functions

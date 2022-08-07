@@ -71,6 +71,10 @@
                 document.getElementById('selectbox').focus();
             }
         } //function evalMessage(event)
+
+        function openNewTab(urlvalue) {
+            window.open(urlvalue,'_blank');
+        } //function openNewTab(urlvalue)
     </script>
 </head>
 <!-- }}}head -->
@@ -85,6 +89,7 @@
         <option value="https://www.classdojo.com/">cdojo</option>
         <option value="https://images.google.com/">gImages</option>
         <option value="https://www.youtube.com/">youtube</option>
+        <option value="https://alex.apollo.edu.vn/teacher.html">alex</option>
     </select>
 
     <a HREF="https://drive.google.com" target="_blank" >
@@ -103,9 +108,6 @@
         <img class="fillDiv" id="tubebox" src="./4_youtube.png">
     </a> <!-- youtube.com -->
 
-    <script>
-        document.getElementById("selectbox").focus();
-    </script>
 </div> <!-- gridbox -->
 </body> 
 <!-- }}}body -->
