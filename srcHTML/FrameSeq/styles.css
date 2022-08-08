@@ -5,7 +5,7 @@ body {
 select {
     overflow: auto;
     color: black;
-    font-size: 1.0em;
+    font-size: 0.9em;
     background-color: rgba(5,5,5,0.0);
     border: 0px;
     border-radius: 5%;
@@ -21,6 +21,7 @@ select:focus {
     color: white;
     font-size: 0.9em;
     background-color: rgba(45,45,45,0.6);
+    opacity: 1.0;
 }
 
 /*}}}element selector*/
@@ -98,8 +99,20 @@ select:focus {
     top: 0vh;
     right: 1.3vw;
     height: 3vh;
-    width: 10vw;
+    width: 6vw;
+    font-size: 0.9em;
+    opacity: 0.6;
 } /*seqSelect*/
+
+#toolSelect:focus {
+    /*background-color: ivory;*/
+    color: white;
+    font-size: 0.9em;
+    background-color: rgba(45,45,45,0.6);
+    opacity: 1.0;
+    height: 3vh;
+    width: 10vw;
+}
 
 #mainImg {
     width: 70%;

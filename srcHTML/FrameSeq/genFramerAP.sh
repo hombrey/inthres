@@ -27,7 +27,7 @@ echo "</head>" >> 0_FrameX.html
 echo "    <!--}}}head-->" >> 0_FrameX.html
 echo "<body>" >> 0_FrameX.html
 echo "    <!--{{{outerFrame-->" >> 0_FrameX.html
-echo " <img class=\"fullPage\" id=\"backgroundX\" src=\"$SOURCEDIR/background.jpg\">" >> 0_FrameX.html
+echo " <img class=\"fullPage\" id=\"backgroundX\" src=\"$SOURCEDIR/backgroundAP.jpg\">" >> 0_FrameX.html
 echo " <iframe class=\"subframe\" id=\"myIframe\" src=\"$SOURCEROOT/startpage/index.html\"></iframe>" >> 0_FrameX.html
 echo "" >> 0_FrameX.html
 echo "    <select id=\"toolSelect\" onClick=\"setToolSource(this.value)\" size=1 autofocus> " >> 0_FrameX.html

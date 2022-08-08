@@ -5,20 +5,22 @@ body {
 video {
     z-index: 1;
     position: fixed;
-    top: 8vh;
-    left: 5vw;
-    height: 90vh;
-    width: 90vw;
+    top: 10vh;
+    right: 3vw;
+    height: 50vh;
+    width: 70vw;
 } /*video*/
 
 select {
-    /*overflow: auto;*/
+    overflow: auto;
     color: white;
     font-size: 0.9em;
+    /*background-color: rgba(0,0,0,0.0);*/
     background-color: rgba(0,0,0,0.6);
     border: 1px solid black; 
     overflow-y: auto;
-    /*border: 0px;*/
+    overflow-x: hidden;
+    border-radius: 4%;
 } /*select*/
 
 select:focus {
@@ -43,10 +45,10 @@ select:focus {
 .vidNonMax {
     z-index: 1;
     position: fixed;
-    top: 8vh;
-    left: 5vw;
-    height: 90vh;
-    width: 90vw;
+    top: 2vh;
+    left: 1vw;
+    height: 98vh;
+    width: 98vw;
     z-index: 0;
 } /*vidNonMax*/
 
@@ -65,32 +67,18 @@ select:focus {
 
     z-index: 1;
     position: fixed;
-    top: 0vh;
-    left: 35vw;
-    height: 7vh;
-    width: 30vw;
-    border-radius: 10%;
+    top: 0.4vh;
+    left: 0.1vw;
+    height: 1.1vh;
+    width: 20vw;
+    /*border-radius: 10%;*/
+    /*width: auto;*/
+    /*height: auto;*/
 
     display: flex;
-    justify-content: center;
+    justify-content: left;
     align-items: center;
 } /*.selector*/
-
-.selectorMin {
-    background-color: rgba(0,0,0,0.7);
-
-    z-index: 1;
-    position: fixed;
-    top: 1vh;
-    left: 1vw;
-    height: 0vh;
-    width: 0vw;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-} /*.selectorMin*/
-
 /*}}}class*/
 
 /*{{{id selector*/
@@ -102,6 +90,9 @@ select:focus {
 
 } /*#backgroundX*/
 
+#filePicker {
+
+} /*filePicker
 
 
 /*}}}id selector*/

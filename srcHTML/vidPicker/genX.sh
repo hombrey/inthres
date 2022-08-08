@@ -7,18 +7,25 @@ SOURCEDIR=`echo "${0%/*}"`
 echo " ----------"
 echo "1 horizontal"
 echo "2 vertical"
+echo "3 drop"
 echo " ----------"
 read -p "select style: " selectedStyle
 if [[ $selectedStyle == "1" ]]; then
     output="x_horiz.html"
     cssType="horizstyle.css"
-    listSize="10"
+    listSize="16"
 fi
 
 if [[ $selectedStyle == "2" ]]; then
     output="x_vert.html"
     cssType="vertstyle.css"
     listSize="3"
+fi
+
+if [[ $selectedStyle == "3" ]]; then
+    output="x_drop.html"
+    cssType="dropstyle.css"
+    listSize="1"
 fi
 
 echo "<!DOCTYPE html>" > $output
@@ -34,6 +41,11 @@ echo "    <video src=\"$SOURCEDIR/img/init.mp4\" id=\"vidPicked\" onmouseover=\"
 echo "    <div id=\"directory\" style=\"display:none\">./</div>" >> $output
 echo "    <div id=\"pickerDiv\" class=\"selector\">" >> $output
 echo "    <select id=\"filePicker\" onchange=\"switchVid(this.id,directory.id)\" size=$listSize>  <!--Call run() function-->" >> $output
+
+#add an empty first selection in drop down style
+if [[ $selectedStyle == "3" ]]; then
+          echo "        <option></option>" >> $output 
+fi
 
 while IFS= read -r line
 do

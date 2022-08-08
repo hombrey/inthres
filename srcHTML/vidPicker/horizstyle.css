@@ -16,12 +16,16 @@ select {
     color: white;
     font-size: 1.1em;
     /*background-color: rgba(0,0,0,0.0);*/
-    background-color: rgba(0,0,0,0.4);
-    /*border: 0px;*/
+    background-color: rgba(0,0,0,0.6);
+    border: 1px solid black; 
     overflow-y: auto;
     overflow-x: hidden;
+    border-radius: 4%;
 } /*select*/
 
+select:focus {
+    border: 4px solid yellow; 
+} /*select:focus*/
 
 /*}}}element selector*/
 
@@ -41,10 +45,10 @@ select {
 .vidNonMax {
     z-index: 1;
     position: fixed;
-    top: 10vh;
-    right: 2vw;
-    height: 80vh;
-    width: 70vw;
+    top: 2.5vh;
+    left: 20vw;
+    height: 95vh;
+    width: 79vw;
     z-index: 0;
 } /*vidNonMax*/
 
@@ -58,37 +62,21 @@ select {
     z-index: 2;
 } /*vidMax*/
 
-.selectorMin {
-    background-color: rgba(0,0,0,0.3);
-
-    z-index: 1;
-    position: fixed;
-    top: 1vh;
-    left: 1vw;
-    height: 0vh;
-    width: 0vw;
-    border-radius: 20%;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-} /*.selectorMin*/
-
 .selector {
-    background-color: rgba(0,0,0,0.3);
+    background-color: rgba(0,0,0,0.0);
 
     z-index: 1;
     position: fixed;
     top: 10vh;
-    left: 1vw;
+    left: 0.1vw;
     height: 70vh;
     width: 20vw;
-    border-radius: 10%;
+    /*border-radius: 10%;*/
     /*width: auto;*/
     /*height: auto;*/
 
     display: flex;
-    justify-content: center;
+    justify-content: left;
     align-items: center;
 } /*.selector*/
 /*}}}class*/
