@@ -76,7 +76,7 @@ const checkElement = async selector => {
 
 async function initWin() {
 
-    await delay (5);
+    await delay (25);
     //check to see if element is loaded
     checkElement('backgroundX').then((selector) => { console.log(selector); });
 
@@ -141,7 +141,7 @@ async function initWin() {
         inputC.setAttribute('oninput','stroke_width = this.value');
         divtoolC.appendChild(inputC);
 
-        await delay (15);
+        await delay (30);
     //END: create elements for drawing functionality
 
     canvas = document.getElementById("canvas");
@@ -160,6 +160,8 @@ async function initWin() {
     //prevent a-z keyboard strokes from selecting another iframe  
     let selectHandle = document.getElementById("seqSelect");
     selectHandle.setAttribute ('onkeydown','IgnoreAlpha(event);');
+
+    document.getElementById("seqSelect").focus(); //dummy select element that grabs the focus of the iframe
 
 } //function initWin()
 
