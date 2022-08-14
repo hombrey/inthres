@@ -59,6 +59,12 @@ function drawKeys(evnt) {
        case 67  : Clear(); break; //key: c
        case 90  : Restore(); break; //key: z
        case 83  : toggleShowColors(); break; //key: s
+       case 49  : if(event.shiftKey) change_color_kb("black"); break; //key: shift 1
+       case 50  : if(event.shiftKey) change_color_kb("red"); break;//key: shift 2
+       case 51  : if(event.shiftKey) change_color_kb("yellow"); break;//key: shift 3
+       case 52  : if(event.shiftKey) change_color_kb("green"); break;//key: shift 4
+       case 53  : if(event.shiftKey) change_color_kb("blue"); break;//key: shift 5
+       case 54  : if(event.shiftKey) change_color_kb("white"); break;//key: shift 6
         default : return;
     } //switch (keyPressed)
 } //drawKeys(event)
@@ -105,31 +111,37 @@ async function initWin() {
         const c1ButtonC = document.createElement('button');
         c1ButtonC.setAttribute('id','color1'); c1ButtonC.setAttribute('class','stroke-color');
         c1ButtonC.setAttribute('style','background:black'); c1ButtonC.setAttribute('onclick','change_color(this)');
+        c1ButtonC.innerHTML="\u{2191}1";
         divtoolC.appendChild(c1ButtonC);
 
         const c2ButtonC = document.createElement('button');
         c2ButtonC.setAttribute('id','color2'); c2ButtonC.setAttribute('class','stroke-color');
         c2ButtonC.setAttribute('style','background:red'); c2ButtonC.setAttribute('onclick','change_color(this)');
+        c2ButtonC.innerHTML="\u{2191}2";
         divtoolC.appendChild(c2ButtonC);
 
         const c3ButtonC = document.createElement('button');
         c3ButtonC.setAttribute('id','color3'); c3ButtonC.setAttribute('class','stroke-color');
         c3ButtonC.setAttribute('style','background:yellow'); c3ButtonC.setAttribute('onclick','change_color(this)');
+        c3ButtonC.innerHTML="\u{2191}3";
         divtoolC.appendChild(c3ButtonC);
 
         const c4ButtonC = document.createElement('button');
         c4ButtonC.setAttribute('id','color4'); c4ButtonC.setAttribute('class','stroke-color');
         c4ButtonC.setAttribute('style','background:green'); c4ButtonC.setAttribute('onclick','change_color(this)');
+        c4ButtonC.innerHTML="\u{2191}4";
         divtoolC.appendChild(c4ButtonC);
 
         const c5ButtonC = document.createElement('button');
         c5ButtonC.setAttribute('id','color5'); c5ButtonC.setAttribute('class','stroke-color');
         c5ButtonC.setAttribute('style','background:blue'); c5ButtonC.setAttribute('onclick','change_color(this)');
+        c5ButtonC.innerHTML="\u{2191}5";
         divtoolC.appendChild(c5ButtonC);
 
         const c6ButtonC = document.createElement('button');
         c6ButtonC.setAttribute('id','color6'); c6ButtonC.setAttribute('class','stroke-color');
         c6ButtonC.setAttribute('style','background:white'); c6ButtonC.setAttribute('onclick','change_color(this)');
+        c6ButtonC.innerHTML="\u{2191}6";
         divtoolC.appendChild(c6ButtonC);
 
         const inputC = document.createElement('input');
@@ -160,8 +172,20 @@ async function initWin() {
     //prevent a-z keyboard strokes from selecting another iframe  
     let selectHandle = document.getElementById("seqSelect");
     selectHandle.setAttribute ('onkeydown','IgnoreAlpha(event);');
+    selectHandle.setAttribute ('onClick','focusSeqSource();');
 
     document.getElementById("seqSelect").focus(); //dummy select element that grabs the focus of the iframe
+
+
+    //add new "new tab tools" to the designated select dropdown element
+    let toolHandle = document.getElementById("toolSelect");
+
+    //This adds a callup to the songs folder
+    let songsOption = document.createElement ('option');
+    songsOption.innerHTML="songs";
+    songsOption.value="../../SongsHTML/0_Songs.html";
+
+    toolHandle.add(songsOption);
 
 } //function initWin()
 
@@ -186,6 +210,22 @@ function focusIframe() {
 
 } //function focusIframe()
 
+async function focusSeqSource() {
+    var theSelect = document.getElementById('seqSelect');
+    var theIframe = document.getElementById('myIframe');
+    var theUrl;
+    theUrl = theSelect.options[theSelect.selectedIndex].value;
+    theIframe.src = theUrl;
+
+    await delay (100);
+
+    focusIframe();
+}
+
+
+// }}} framer handling functions
+
+// {{{ draw functions
 
 function toggleShowColors() {
     if (IsColorPaneHidden) {
@@ -199,9 +239,9 @@ function toggleShowColors() {
     } //if hideColorPane
 } //function toggleShowColors
 
-// }}} framer handling functions
-
-// {{{ draw functions
+function change_color_kb(color) {
+        stroke_color = color;
+} //function change_color 
 
 function change_color(element) {
         stroke_color = element.style.background;

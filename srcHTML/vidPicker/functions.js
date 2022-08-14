@@ -41,14 +41,26 @@ function evalKeyDown(evnt) {
                    if (osdTimeout > 0) showOSD(clickedVid.playbackRate);
                    break; // ']'
         case 190 : evnt.preventDefault();
-                   clickedVid.currentTime+=5;
+                   clickedVid.pause();
+                   clickedVid.currentTime+=0.1;
                    break; // '<period>'
         case 188 : evnt.preventDefault();
-                   clickedVid.currentTime-=5;
+                   clickedVid.pause();
+                   clickedVid.currentTime-=0.1;
                    break; // '<comma>'
-        case 77 :  toggleVidMax(evnt);
+        case 37 : evnt.preventDefault();
+                   clickedVid.currentTime-=5;
+                   break; // '<left>'
+        case 39 : evnt.preventDefault();
+                   clickedVid.currentTime+=5;
+                   break; // '<right>'
+        case 84 :  toggleVidMax(evnt);
+                   break; // 't'
+        case 77 :  if (!clickedVid.muted) clickedVid.muted=true; else clickedVid.muted=false;
+                   showOSD("mute: "+clickedVid.muted);
                    break; // 'm'
-        case 70 :  if(event.ctrlKey) toggleVidFullScreen(evnt); //if (event.ctrlKey)
+        //case 70 :  if(event.ctrlKey) toggleVidFullScreen(evnt); //if (event.ctrlKey)
+        case 70 :  if(!event.ctrlKey) toggleVidFullScreen(evnt); //if
                    break; // 'f'
         case 86 : document.getElementById("filePicker").focus(); break; //key: v -- focus on video picker frame
        case 87  : if(!event.shiftKey) parent.postMessage("FocusSeq","*");
@@ -123,6 +135,7 @@ function closeVidPlayer() {
 function evalCtrlKey(evnt) {
        let keyPressed = evnt.keyCode;
 } //function evalCtrlKey()
+
 function toggleVidMax(evnt){
     if (!isVidMax){
         document.getElementById("vidPicked").className = "vidMax";
@@ -135,7 +148,8 @@ function toggleVidMax(evnt){
         isVidMax = false;
     } //else of isVidMax
 }//function toggleVidMax
-function toggleVidFullScreen(evnt) {
+
+async function toggleVidFullScreen(evnt) {
     evnt.preventDefault();
     if (!isVidFullScreen){
         if (clickedVid.requestFullscreen) { clickedVid.requestFullscreen(); }
@@ -146,6 +160,10 @@ function toggleVidFullScreen(evnt) {
         if (clickedVid.exitFullscreen) { clickedVid.exitFullscreen(); } 
         else if (clickedVid.webkitExitFullscreen) { clickedVid.webkitExitFullscreen(); }
         isVidFullScreen = false;
+        
+        //return focus to element after extiing from fullscreen
+        await delay (200);
+        document.getElementById("filePicker").focus();
     } //else of isfullScreen
                    
 } //function toggleFullScreen()
