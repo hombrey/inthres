@@ -70,6 +70,7 @@
                         break; //key: a
                 case 39 : rotatePiece(90);break;
                 case 37 : rotatePiece(-90);break;
+                case 83 : if(!event.shiftKey) shufflePick(2); break; //key: s
                 case 80 : if(!event.shiftKey) resetPiece(pickedNum); 
                         else resetAll();
                         break;//key: p
@@ -97,52 +98,52 @@
                       document.getElementById('piece11')
             ]; //pieces =[]
 
-            pieces[1-1].pickX = 500; pieces[1-1].placeX = 10;
+            pieces[1-1].pickX = 500; pieces[1-1].placeX = 0;
             pieces[1-1].pickY = 720; pieces[1-1].placeY = 25;
             pieces[1-1].angle = 0;
             pieces[1-1].prompt = new sound(assetDir+"wav/prompt1.mp3");
 
-            pieces[2-1].pickX = 500; pieces[2-1].placeX = 325;
+            pieces[2-1].pickX = 500; pieces[2-1].placeX = 226;
             pieces[2-1].pickY = 720; pieces[2-1].placeY = 25;
             pieces[2-1].angle = 0;
             pieces[2-1].prompt = new sound(assetDir+"wav/prompt2.mp3");
 
-            pieces[3-1].pickX = 500; pieces[3-1].placeX = 640;
+            pieces[3-1].pickX = 500; pieces[3-1].placeX = 526;
             pieces[3-1].pickY = 720; pieces[3-1].placeY = 25;
             pieces[3-1].angle = 0;
             pieces[3-1].prompt = new sound(assetDir+"wav/prompt3.mp3");
 
-            pieces[4-1].pickX = 500; pieces[4-1].placeX = 955;
+            pieces[4-1].pickX = 500; pieces[4-1].placeX = 754;
             pieces[4-1].pickY = 720; pieces[4-1].placeY = 25;
             pieces[4-1].angle = 0;
             pieces[4-1].prompt = new sound(assetDir+"wav/prompt4.mp3");
 
-            pieces[5-1].pickX = 500; pieces[5-1].placeX = 10;
-            pieces[5-1].pickY = 720; pieces[5-1].placeY = 390;
+            pieces[5-1].pickX = 500; pieces[5-1].placeX = 980;
+            pieces[5-1].pickY = 720; pieces[5-1].placeY = 25;
             pieces[5-1].angle = 0;
             pieces[5-1].prompt = new sound(assetDir+"wav/prompt5.mp3");
 
-            pieces[6-1].pickX = 500; pieces[6-1].placeX = 325;
+            pieces[6-1].pickX = 500; pieces[6-1].placeX = 0;
             pieces[6-1].pickY = 720; pieces[6-1].placeY = 390;
             pieces[6-1].angle = 0;
             pieces[6-1].prompt = new sound(assetDir+"wav/prompt6.mp3");
 
-            pieces[7-1].pickX = 500; pieces[7-1].placeX = 640;
+            pieces[7-1].pickX = 500; pieces[7-1].placeX = 226;
             pieces[7-1].pickY = 720; pieces[7-1].placeY = 390;
             pieces[7-1].angle = 0;
             pieces[7-1].prompt = new sound(assetDir+"wav/prompt7.mp3");
 
-            pieces[8-1].pickX = 500; pieces[8-1].placeX = 955;
+            pieces[8-1].pickX = 500; pieces[8-1].placeX = 526;
             pieces[8-1].pickY = 720; pieces[8-1].placeY = 390;
             pieces[8-1].angle = 0;
             pieces[8-1].prompt = new sound(assetDir+"wav/prompt8.mp3");
 
-            pieces[9-1].pickX = 500; pieces[9-1].placeX = 640;
+            pieces[9-1].pickX = 500; pieces[9-1].placeX = 754;
             pieces[9-1].pickY = 720; pieces[9-1].placeY = 390;
             pieces[9-1].angle = 0;
             pieces[9-1].prompt = new sound(assetDir+"wav/prompt9.mp3");
 
-            pieces[10-1].pickX = 500; pieces[10-1].placeX = 955;
+            pieces[10-1].pickX = 500; pieces[10-1].placeX = 980;
             pieces[10-1].pickY = 720; pieces[10-1].placeY = 390;
             pieces[10-1].angle = 0;
             pieces[10-1].prompt = new sound(assetDir+"wav/prompt10.mp3");

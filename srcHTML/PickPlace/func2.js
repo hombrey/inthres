@@ -83,7 +83,7 @@ await delay (80);
 
 function evalKeyDown2(evnt) {
     let keyPressed = evnt.keyCode;
-    console.log ("Pressed2:", keyPressed);
+    //console.log ("Pressed2:", keyPressed);
     switch (keyPressed) {
        case 87  : if(!event.shiftKey) parent.postMessage("FocusSeq","*");
                   else parent.postMessage("FocusTool","*"); 
@@ -148,6 +148,44 @@ function resetAll() {
         pieces[pInx-1].style.transform = "rotate("+pieces[pInx-1].angle+"deg)";
     } //for (pInx=1; pInx=pieces.size+1; pInx+)
 } //function resetAll()
+
+// this randomly shuffles the pick locations of the pieces
+function shufflePick(lastNum) {
+    //lastNum = 2 //for piece sets with angryCat FC
+    //lastNum = 1 //shuffle all pieces.
+
+    var createIndx;
+    var numArray= [];
+    var iShuf, jShuf,tempShuf;
+    var pickIndx;
+
+    cardSound.start();
+   
+    //create number array
+    for (createIndx = pieces.length - lastNum; createIndx >= 0; createIndx--)   numArray.push(createIndx);
+    
+    //shuffle contents of array
+    for (iShuf = numArray.length - 1; iShuf > 0; iShuf--)  {
+        jShuf = Math.floor(Math.random() * (iShuf+1));
+        tempShuf = numArray[iShuf];
+        numArray[iShuf] = numArray[jShuf];
+        numArray[jShuf] = tempShuf;
+    } //for (iShuf = numArray.length - 1; iShuf > 0; iShuf--) 
+    //console.log(numArray);
+
+    //populate contents of pick array from place locations indexed by shuffled number array
+    for (pickIndx = numArray.length - 1; pickIndx >= 0; pickIndx--) {
+        //console.log ("INDEX:"+pickIndx);
+        //console.log ("contentOfNumArray:"+numArray[pickIndx]);
+        //console.log ("locX:"+pieces[numArray[pickIndx]].placeX);
+        //console.log ("locY:"+pieces[numArray[pickIndx]].placeY);
+        pieces[pickIndx].pickX = pieces[numArray[pickIndx]].placeX;
+        pieces[pickIndx].pickY = pieces[numArray[pickIndx]].placeY;
+
+    } //for (pickIndx = numArray.length - 1; pickIndx > 0; pickIndx--)
+
+} //function shufflePick()
+
 function movePiece() {
     window.addEventListener("mousemove",followMouse);
     insertCss (".pieceClass {transition: 0ms;}"); 

@@ -1,0 +1,156 @@
+
+    <img class="fullPage"   id="placemat"                             src="./mat.webp">
+    <img class="pieceClass" id="piece1" onClick="clickPiece(this.id)" src="./1_front/1.webp">
+    <img class="pieceClass" id="piece2" onClick="clickPiece(this.id)" src="./1_front/2.webp">
+    <img class="pieceClass" id="piece3" onClick="clickPiece(this.id)" src="./1_front/3.webp">
+    <img class="pieceClass" id="piece4" onClick="clickPiece(this.id)" src="./1_front/4.webp">
+    <img class="pieceClass" id="piece5" onClick="clickPiece(this.id)" src="./1_front/5.webp">
+    <img class="pieceClass" id="piece6" onClick="clickPiece(this.id)" src="./1_front/6.webp">
+    <img class="pieceClass" id="piece7" onClick="clickPiece(this.id)" src="./1_front/7.webp">
+    <img class="pieceClass" id="piece8" onClick="clickPiece(this.id)" src="./1_front/8.webp">
+    <img class="pieceClass" id="piece9" onClick="clickPiece(this.id)" src="./1_front/9.webp">
+    <img class="pieceClass" id="piece10" onClick="clickPiece(this.id)" src="./1_front/10.webp">
+    <img class="pieceClass" id="piece11" onClick="clickPiece(this.id)" src="./1_front/11.webp">
+    <img class="pieceClass" id="piece12" onClick="clickPiece(this.id)" src="./1_front/12.webp">
+    <img class="pieceClass" id="piece13" onClick="clickPiece(this.id)" src="./1_front/13.webp">
+    <img class="pieceClass" id="piece14" onClick="clickPiece(this.id)" src="./1_front/14.webp">
+    <img class="pieceClass" id="piece15" onClick="clickPiece(this.id)" src="./1_front/15.webp">
+    <img class="pieceClass" id="piece16" onClick="clickPiece(this.id)" src="./1_front/16.webp">
+    <script>
+
+        //{{{eval keys
+        function evalKeyDown(evnt) {
+            let keyPressed = evnt.keyCode;
+            //console.log ("Pressed:", keyPressed);
+            switch (keyPressed) {
+               case 190 : evnt.preventDefault(); movePiece(); break;//key: period
+                case 65 : if(!event.shiftKey) selectPiece(1); else placePiece(1); break; //key: a
+                case 66 : if(!event.shiftKey) selectPiece(2); else placePiece(2); break; //key: b
+                case 67 : if(!event.shiftKey) selectPiece(3); else placePiece(3); break; //key: c
+                case 68 : if(!event.shiftKey) selectPiece(4); else placePiece(4); break; //key: d
+                case 69 : if(!event.shiftKey) selectPiece(5); else placePiece(5); break; //key: e
+                case 70 : if(!event.shiftKey) selectPiece(6); else placePiece(6); break; //key: f
+                case 71 : if(!event.shiftKey) selectPiece(7); else placePiece(7); break; //key: g
+                case 72 : if(!event.shiftKey) selectPiece(8); else placePiece(8); break; //key: h
+                case 73 : if(!event.shiftKey) selectPiece(9); else placePiece(9); break; //key: i
+                case 74 : if(!event.shiftKey) selectPiece(10); else placePiece(10); break; //key: j
+                case 75 : if(!event.shiftKey) selectPiece(11); else placePiece(11); break; //key: k
+                case 76 : if(!event.shiftKey) selectPiece(12); else placePiece(12); break; //key: l
+                case 77 : if(!event.shiftKey) selectPiece(13); else placePiece(13); break; //key: m
+                case 78 : if(!event.shiftKey) selectPiece(14); else placePiece(14); break; //key: n
+                case 79 : if(!event.shiftKey) selectPiece(15); else placePiece(15); break; //key: o
+                case 80 : if(!event.shiftKey) selectPiece(16); else placePiece(16); break; //key: p
+                case 49 : if(!event.shiftKey) resetPiece(pickedNum); 
+                        else resetAll();
+                        break;//key: 1
+            case 188 : if(!event.shiftKey) toggleHide(); 
+                        break;//key: <comma>
+            case  32 : evnt.preventDefault(); playPrompt(); break;//key: <spacebar>
+                default : return;
+            } //switch (keyPressed)
+        } //evalKey(event)
+        function evalKeyUp(evnt) {
+            let keyPressed = evnt.keyCode;
+            if (keyPressed==190) leavePiece(); //key: spacebar
+        } //evalKey(event)
+        //}}}eval keys
+
+        //{{{ pick place and audio of pieces
+        function placeLocations() {
+            pieces = [document.getElementById('piece1'),document.getElementById('piece2'),
+                      document.getElementById('piece3'),document.getElementById('piece4'),
+                      document.getElementById('piece5'),document.getElementById('piece6'),
+                      document.getElementById('piece7'),document.getElementById('piece8'),
+                      document.getElementById('piece9'),document.getElementById('piece10'),
+                      document.getElementById('piece11'),document.getElementById('piece12'),
+                      document.getElementById('piece13'),document.getElementById('piece14'),
+                      document.getElementById('piece15'),document.getElementById('piece16')
+            ]; //pieces =[]
+
+            pieces[1-1].pickX = 100; pieces[1-1].placeX = 100;
+            pieces[1-1].pickY = 10; pieces[1-1].placeY = 720;
+            pieces[1-1].angle = 0;
+            pieces[1-1].prompt = new sound(assetDir+"wav/prompta.mp3");
+
+
+            pieces[2-1].pickX = 100; pieces[2-1].placeX = 100;
+            pieces[2-1].pickY = 10; pieces[2-1].placeY = 720;
+            pieces[2-1].angle = 0;
+            pieces[2-1].prompt = new sound(assetDir+"wav/promptb.mp3");
+
+            pieces[3-1].pickX = 100; pieces[3-1].placeX = 100;
+            pieces[3-1].pickY = 10; pieces[3-1].placeY = 720;
+            pieces[3-1].angle = 0;
+            pieces[3-1].prompt = new sound(assetDir+"wav/promptc.mp3");
+
+            pieces[4-1].pickX = 100; pieces[4-1].placeX = 100;
+            pieces[4-1].pickY = 10; pieces[4-1].placeY = 720;
+            pieces[4-1].angle = 0;
+            pieces[4-1].prompt = new sound(assetDir+"wav/promptd.mp3");
+
+            pieces[5-1].pickX = 100; pieces[5-1].placeX = 100;
+            pieces[5-1].pickY = 10; pieces[5-1].placeY = 720;
+            pieces[5-1].angle = 0;
+            pieces[5-1].prompt = new sound(assetDir+"wav/prompte.mp3");
+
+            pieces[6-1].pickX = 100; pieces[6-1].placeX = 100;
+            pieces[6-1].pickY = 10; pieces[6-1].placeY = 720;
+            pieces[6-1].angle = 0;
+            pieces[6-1].prompt = new sound(assetDir+"wav/promptf.mp3");
+
+            pieces[7-1].pickX = 100; pieces[7-1].placeX = 100;
+            pieces[7-1].pickY = 10; pieces[7-1].placeY = 720;
+            pieces[7-1].angle = 0;
+            pieces[7-1].prompt = new sound(assetDir+"wav/promptg.mp3");
+
+            pieces[8-1].pickX = 100; pieces[8-1].placeX = 100;
+            pieces[8-1].pickY = 10; pieces[8-1].placeY = 720;
+            pieces[8-1].angle = 0;
+            pieces[8-1].prompt = new sound(assetDir+"wav/prompth.mp3");
+
+            pieces[9-1].pickX = 100; pieces[9-1].placeX = 100;
+            pieces[9-1].pickY = 10; pieces[9-1].placeY = 720;
+            pieces[9-1].angle = 0;
+            pieces[9-1].prompt = new sound(assetDir+"wav/prompti.mp3");
+
+            pieces[10-1].pickX = 100; pieces[10-1].placeX = 100;
+            pieces[10-1].pickY = 10; pieces[10-1].placeY = 720;
+            pieces[10-1].angle = 0;
+            pieces[10-1].prompt = new sound(assetDir+"wav/promptj.mp3");
+
+            pieces[11-1].pickX = 100; pieces[11-1].placeX = 100;
+            pieces[11-1].pickY = 10; pieces[11-1].placeY = 720;
+            pieces[11-1].angle = 0;
+            pieces[11-1].prompt = new sound(assetDir+"wav/promptk.mp3");
+
+            pieces[12-1].pickX = 100; pieces[12-1].placeX = 100;
+            pieces[12-1].pickY = 10; pieces[12-1].placeY = 720;
+            pieces[12-1].angle = 0;
+            pieces[12-1].prompt = new sound(assetDir+"wav/promptl.mp3");
+
+            pieces[13-1].pickX = 100; pieces[13-1].placeX = 100;
+            pieces[13-1].pickY = 10; pieces[13-1].placeY = 720;
+            pieces[13-1].angle = 0;
+            pieces[13-1].prompt = new sound(assetDir+"wav/promptm.mp3");
+
+            pieces[14-1].pickX = 100; pieces[14-1].placeX = 100;
+            pieces[14-1].pickY = 10; pieces[14-1].placeY = 720;
+            pieces[14-1].angle = 0;
+            pieces[14-1].prompt = new sound(assetDir+"wav/promptn.mp3");
+
+            pieces[15-1].pickX = 100; pieces[15-1].placeX = 100;
+            pieces[15-1].pickY = 10; pieces[15-1].placeY = 720;
+            pieces[15-1].angle = 0;
+            pieces[15-1].prompt = new sound(assetDir+"wav/prompto.mp3");
+
+            pieces[16-1].pickX = 100; pieces[16-1].placeX = 100;
+            pieces[16-1].pickY = 10; pieces[16-1].placeY = 720;
+            pieces[16-1].angle = 0;
+            pieces[16-1].prompt = new sound(assetDir+"wav/promptp.mp3");
+
+        } //function placePieces
+        //}}} pick place and audio of pieces
+
+    </script>
+</body> 
+</html> 

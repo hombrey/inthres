@@ -139,6 +139,44 @@ function rotatePiece(rotation) {
     if (pieces[pickedNum-1].angle == -90) pieces[pickedNum-1].angle = 270;
     pieces[pickedNum-1].style.transform = "rotate("+pieces[pickedNum-1].angle+"deg)";
 } //function rotatePiece()
+
+// this randomly shuffles the pick locations of the pieces
+function shufflePick(lastNum) {
+    //lastNum = 2 //for piece sets with angryCat FC
+    //lastNum = 1 //shuffle all pieces.
+
+    var createIndx;
+    var numArray= [];
+    var iShuf, jShuf,tempShuf;
+    var pickIndx;
+
+    cardSound.start();
+   
+    //create number array
+    for (createIndx = pieces.length - lastNum; createIndx >= 0; createIndx--)   numArray.push(createIndx);
+    
+    //shuffle contents of array
+    for (iShuf = numArray.length - 1; iShuf > 0; iShuf--)  {
+        jShuf = Math.floor(Math.random() * (iShuf+1));
+        tempShuf = numArray[iShuf];
+        numArray[iShuf] = numArray[jShuf];
+        numArray[jShuf] = tempShuf;
+    } //for (iShuf = numArray.length - 1; iShuf > 0; iShuf--) 
+    //console.log(numArray);
+
+    //populate contents of pick array from place locations indexed by shuffled number array
+    for (pickIndx = numArray.length - 1; pickIndx >= 0; pickIndx--) {
+        //console.log ("INDEX:"+pickIndx);
+        //console.log ("contentOfNumArray:"+numArray[pickIndx]);
+        //console.log ("locX:"+pieces[numArray[pickIndx]].placeX);
+        //console.log ("locY:"+pieces[numArray[pickIndx]].placeY);
+        pieces[pickIndx].pickX = pieces[numArray[pickIndx]].placeX;
+        pieces[pickIndx].pickY = pieces[numArray[pickIndx]].placeY;
+
+    } //for (pickIndx = numArray.length - 1; pickIndx > 0; pickIndx--)
+
+} //function shufflePick()
+
 function resetAll() {
     pickSound.start();
     for (let pInx=1; pInx<pieces.length+1; pInx++) {

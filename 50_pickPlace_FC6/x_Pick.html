@@ -52,6 +52,7 @@
                 case 48 : if(!event.shiftKey) selectPiece(7); 
                         else placePiece(7);
                         break; //key: 0
+                case 83 : if(!event.shiftKey) shufflePick(2); break; //key: s
                 case 39 : rotatePiece(90);break;
                 case 37 : rotatePiece(-90);break;
                 case 80 : if(!event.shiftKey) resetPiece(pickedNum); 
