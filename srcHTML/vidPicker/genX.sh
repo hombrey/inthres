@@ -37,26 +37,36 @@ echo "</head>" >> $output
 echo "" >> $output
 echo "<body id=\"myBody\">" >> $output
 echo "    <img class=\"fullPage\" id=\"backgroundX\" src=\"$SOURCEDIR/img/BG0.png\">" >> $output
-echo "    <video src=\"$SOURCEDIR/img/init.mp4\" id=\"vidPicked\" onmouseover=\"initVidPlayer(this.id)\"></video>" >> $output
-echo "    <div id=\"directory\" style=\"display:none\">./</div>" >> $output
+
 echo "    <div id=\"pickerDiv\" class=\"selector\">" >> $output
 echo "    <select id=\"filePicker\" onchange=\"switchVid(this.id,directory.id)\" size=$listSize>  <!--Call run() function-->" >> $output
-
-#add an empty first selection in drop down style
-if [[ $selectedStyle == "3" ]]; then
-          echo "        <option></option>" >> $output 
-fi
-
+vidIndex=1
 while IFS= read -r line
 do
     EVAL=`echo " \"$line\" "`
     if [[ $EVAL == *"mp4"* || $EVAL == *"avi"* || $EVAL == *"webm"* ]]; then
-          echo "        <option>$line</option>" >> $output 
+        if [[ $vidIndex == 1 ]]; then 
+            FIRSTVID=$line 
+        fi
+       echo "        <option>$line</option>" >> $output 
+       ((vidIndex++))
     fi
 done < "$input"
-
 echo "    </select>" >> $output
 echo "    </div>" >> $output
+
+echo "result:"
+echo $FIRSTVID
+
+#immediately show first video clip in dropdown style
+if [[ $selectedStyle == "3" ]]; then
+    echo "    <video src=\"./$FIRSTVID\" id=\"vidPicked\" onmouseover=\"initVidPlayer(this.id)\"></video>" >> $output
+else
+    echo "    <video src=\"$SOURCEDIR/img/init.mp4\" id=\"vidPicked\" onmouseover=\"initVidPlayer(this.id)\"></video>" >> $output
+fi
+
+echo "    <div id=\"directory\" style=\"display:none\">./</div>" >> $output
+
 echo "</body> " >> $output
 echo "    <script src=\"$SOURCEDIR/functions.js\"></script> " >> $output
 echo "</html> " >> $output

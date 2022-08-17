@@ -34,14 +34,14 @@
                         break; //key: 6
                 case 39 : rotatePiece(90);break;
                 case 37 : rotatePiece(-90);break;
+                case 83 : if(!event.shiftKey) shufflePick(1,"pick"); break; //key: s
                 case 80 : if(!event.shiftKey) resetPiece(pickedNum); 
                         else resetAll();
                         break;//key: p
             case 188 : if(!event.shiftKey) toggleHide(); 
                         else  hideAll(); 
                         break;//key: <comma>
-            case  32 : evnt.preventDefault(); playPrompt(); break;//key: <spacebar>
-            case  8 : parent.focus(); break; //key: Escape --This gives control back to reveal.js when in an iframe 
+            case 32 : evnt.preventDefault(); playPrompt(); break;//key: <spacebar>
                 default : return;
             } //switch (keyPressed)
         } //evalKey(event)

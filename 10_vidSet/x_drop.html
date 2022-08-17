@@ -2,22 +2,21 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="./../srcHTML/vidPicker/dropstyle.css">
+    <link rel="stylesheet" href="../srcHTML/vidPicker/dropstyle.css">
 </head>
 
 <body id="myBody">
-    <img class="fullPage" id="backgroundX" src="./../srcHTML/vidPicker/img/BG0.png">
-    <video src="./../srcHTML/vidPicker/img/init.mp4" id="vidPicked" onmouseover="initVidPlayer(this.id)"></video>
-    <div id="directory" style="display:none">./</div>
+    <img class="fullPage" id="backgroundX" src="../srcHTML/vidPicker/img/BG0.png">
     <div id="pickerDiv" class="selector">
     <select id="filePicker" onchange="switchVid(this.id,directory.id)" size=1>  <!--Call run() function-->
-        <option></option>
         <option>1_IsPollyInOnOrUnderX.mp4</option>
         <option>2_countGame_1sec.mp4</option>
         <option>3_singleFrameCircles.webm</option>
         <option>3_singleFrameCirclesVeryLongTitleThismustholdsomekindofworldrecord.webm</option>
     </select>
     </div>
+    <video src="./1_IsPollyInOnOrUnderX.mp4" id="vidPicked" onmouseover="initVidPlayer(this.id)"></video>
+    <div id="directory" style="display:none">./</div>
 </body> 
-    <script src="./../srcHTML/vidPicker/functions.js"></script> 
+    <script src="../srcHTML/vidPicker/functions.js"></script> 
 </html> 

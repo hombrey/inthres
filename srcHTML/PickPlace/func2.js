@@ -150,7 +150,7 @@ function resetAll() {
 } //function resetAll()
 
 // this randomly shuffles the pick locations of the pieces
-function shufflePick(lastNum) {
+function shufflePick(lastNum,shuffleSource) {
     //lastNum = 2 //for piece sets with angryCat FC
     //lastNum = 1 //shuffle all pieces.
 
@@ -175,14 +175,30 @@ function shufflePick(lastNum) {
 
     //populate contents of pick array from place locations indexed by shuffled number array
     for (pickIndx = numArray.length - 1; pickIndx >= 0; pickIndx--) {
-        //console.log ("INDEX:"+pickIndx);
-        //console.log ("contentOfNumArray:"+numArray[pickIndx]);
+        //
         //console.log ("locX:"+pieces[numArray[pickIndx]].placeX);
         //console.log ("locY:"+pieces[numArray[pickIndx]].placeY);
-        pieces[pickIndx].pickX = pieces[numArray[pickIndx]].placeX;
-        pieces[pickIndx].pickY = pieces[numArray[pickIndx]].placeY;
 
+        if (shuffleSource == "pick") {
+            pieces[pickIndx].shuffX = pieces[numArray[pickIndx]].pickX;
+            pieces[pickIndx].shuffY = pieces[numArray[pickIndx]].pickY;
+        } else {
+            pieces[pickIndx].shuffX = pieces[numArray[pickIndx]].placeX;
+            pieces[pickIndx].shuffY = pieces[numArray[pickIndx]].placeY;
+        } // if (shuffleSource)
+
+        //console.log ("shuffX:"+pieces[numArray[pickIndx]].shuffX);
+        //console.log ("shuffY:"+pieces[numArray[pickIndx]].shuffY);
+    //
     } //for (pickIndx = numArray.length - 1; pickIndx > 0; pickIndx--)
+
+    //move pieces to the shuffled locations
+    for (pickIndx=1; pickIndx<(pieces.length+1); pickIndx++) {
+        pieces[pickIndx-1].style.left = Math.round (scaleX*pieces[pickIndx-1].shuffX)+'px';
+        pieces[pickIndx-1].style.top = Math.round (scaleY*pieces[pickIndx-1].shuffY)+'px';
+        pieces[pickIndx-1].angle = 0;
+        pieces[pickIndx-1].style.transform = "rotate("+pieces[pickIndx-1].angle+"deg)";
+    } //for (pickIndx=1; pickIndx=pieces.size+1; pickIndx+)
 
 } //function shufflePick()
 
@@ -192,7 +208,7 @@ function movePiece() {
     //console.log("picked", pickedNum); 
 } //function leavePiece()
 function leavePiece() {
-    pickSound.start();
+    //pickSound.start();
     window.removeEventListener("mousemove",followMouse);
     insertCss (".pieceClass {transition: 100ms;}"); 
 } //function leavePiece()
