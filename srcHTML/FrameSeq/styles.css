@@ -42,11 +42,19 @@ select:focus {
 
 .canvasTap {
     pointer-events:auto;
+    background:transparent;
     border: 4px solid black; 
 } /*canvasTap*/
 
+.canvasWB {
+    pointer-events:auto;
+    background:#051505;
+    border: 4px solid black; 
+} /*canvasWB*/
+
 .canvasNoTap {
     pointer-events:none;
+    background:transparent;
     border: 4px solid yellow; 
 } /*canvasNoTap*/
 
@@ -134,7 +142,7 @@ select:focus {
 
 #canvas {
     z-index: 3;
-    background:transparent;
+    /*background:transparent;*/
     position: fixed;
     top: 0.1vh;
     left: 0.1vw;

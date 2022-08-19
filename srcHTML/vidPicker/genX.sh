@@ -1,28 +1,51 @@
 #!/bin/bash
 ls | sort -n > /tmp/list.txt
 input="/tmp/list.txt"
+optionsList="/tmp/optionlist.txt"
 # extract the source directory from the command used to call this script
 SOURCEDIR=`echo "${0%/*}"`
 
 echo " ----------"
-echo "1 horizontal"
-echo "2 vertical"
-echo "3 drop"
+echo "h) horizontal"
+echo "v) vertical"
+echo "d) drop"
 echo " ----------"
 read -p "select style: " selectedStyle
-if [[ $selectedStyle == "1" ]]; then
+
+# BEGIN: enclose list of vid files in select tag and place them in temporary file
+    vidIndex=0
+    echo "" > $optionsList
+    while IFS= read -r line
+    do
+        EVAL=`echo " \"$line\" "`
+        if [[ $EVAL == *"mp4"* || $EVAL == *"avi"* || $EVAL == *"webm"* ]]; then
+        ((vidIndex++))
+            if [[ $vidIndex == 1 ]]; then 
+                FIRSTVID=$line 
+            fi
+        echo "        <option>$line</option>" >> $optionsList
+        fi
+    done < "$input"
+# END: enclose list of vid files in select tag and place them in temporary file
+
+
+if [[ $selectedStyle == "h" ]]; then
     output="x_horiz.html"
     cssType="horizstyle.css"
-    listSize="16"
+    if [ $vidIndex .ge 16 ]; then
+        listSize="16"
+    else
+        listSize=$vidIndex;
+    fi
 fi
 
-if [[ $selectedStyle == "2" ]]; then
+if [[ $selectedStyle == "v" ]]; then
     output="x_vert.html"
     cssType="vertstyle.css"
     listSize="3"
 fi
 
-if [[ $selectedStyle == "3" ]]; then
+if [[ $selectedStyle == "d" ]]; then
     output="x_drop.html"
     cssType="dropstyle.css"
     listSize="1"
@@ -40,26 +63,14 @@ echo "    <img class=\"fullPage\" id=\"backgroundX\" src=\"$SOURCEDIR/img/BG0.pn
 
 echo "    <div id=\"pickerDiv\" class=\"selector\">" >> $output
 echo "    <select id=\"filePicker\" onchange=\"switchVid(this.id,directory.id)\" size=$listSize>  <!--Call run() function-->" >> $output
-vidIndex=1
-while IFS= read -r line
-do
-    EVAL=`echo " \"$line\" "`
-    if [[ $EVAL == *"mp4"* || $EVAL == *"avi"* || $EVAL == *"webm"* ]]; then
-        if [[ $vidIndex == 1 ]]; then 
-            FIRSTVID=$line 
-        fi
-       echo "        <option>$line</option>" >> $output 
-       ((vidIndex++))
-    fi
-done < "$input"
+
+cat $optionsList >> $output
+
 echo "    </select>" >> $output
 echo "    </div>" >> $output
 
-echo "result:"
-echo $FIRSTVID
-
 #immediately show first video clip in dropdown style
-if [[ $selectedStyle == "3" ]]; then
+if [[ $selectedStyle == "d" ]]; then
     echo "    <video src=\"./$FIRSTVID\" id=\"vidPicked\" onmouseover=\"initVidPlayer(this.id)\"></video>" >> $output
 else
     echo "    <video src=\"$SOURCEDIR/img/init.mp4\" id=\"vidPicked\" onmouseover=\"initVidPlayer(this.id)\"></video>" >> $output

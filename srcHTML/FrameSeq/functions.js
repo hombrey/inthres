@@ -6,6 +6,7 @@ let start_index;
 let stroke_color;
 let stroke_width;
 let is_drawing;
+let isWBdark=false;
 let IsColorPaneHidden=true;
 // }}} variables
 
@@ -38,7 +39,7 @@ function evalMessage (evnt) {
     canvas.addEventListener("mouseup", stop, false);
     canvas.addEventListener("mouseout", stop, false);
     window.addEventListener("keydown", drawKeys, false);
-    document.getElementById("canvas").className = "canvasTap";
+    canvas.className = "canvasTap";
 
 } //function evalMessage(event)
 
@@ -46,8 +47,11 @@ function evalKeyDown(evnt) {
     let keyPressed = evnt.keyCode;
     //console.log ("keyUp: ",keyPressed);
     switch (keyPressed) {
-       case 87  : focusIframe(); break; //key: w
-       case 82  : window.location.reload(); break; //key: r
+       case 87  : if (!event.shiftKey) focusIframe(); 
+                  else document.getElementById('toolSelect').focus();
+                  break; //key: w
+       case 82  : window.location.reload(); 
+                  break; //key: r
         default : return;
     } //switch (keyPressed)
 } //evalKey(event)
@@ -56,6 +60,7 @@ function drawKeys(evnt) {
     let keyPressed = evnt.keyCode;
     //console.log ("draw keyUp: ",keyPressed);
     switch (keyPressed) {
+       case 66  : toggleWB(); break; //key: b
        case 67  : Clear(); break; //key: c
        case 90  : Restore(); break; //key: z
        case 83  : toggleShowColors(); break; //key: s
@@ -87,9 +92,9 @@ async function initWin() {
     checkElement('backgroundX').then((selector) => { console.log(selector); });
 
     //BEGIN: create HTML elements for drawing functionality
-        const canvasC = document.createElement('canvas');
-        canvasC.setAttribute("id","canvas");
-        document.body.appendChild(canvasC);
+        canvas = document.createElement('canvas');
+        canvas.setAttribute("id","canvas");
+        document.body.appendChild(canvas);
 
         const divtoolC = document.createElement('div');
         divtoolC.setAttribute('id','pentool');
@@ -156,7 +161,7 @@ async function initWin() {
         await delay (30);
     //END: create elements for drawing functionality
 
-    canvas = document.getElementById("canvas");
+    //canvas = document.getElementById("canvas");
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
@@ -165,7 +170,7 @@ async function initWin() {
     context.fillRect(0, 0, canvas.width, canvas.height);
 
     start_index = -1;
-    stroke_color = 'black';
+    stroke_color = 'blue';
     stroke_width = "2";
     is_drawing = false;
 
@@ -206,7 +211,7 @@ function focusIframe() {
     canvas.removeEventListener("mouseup", stop, false);
     canvas.removeEventListener("mouseout", stop, false);
     window.removeEventListener("keydown", drawKeys, false);
-    document.getElementById("canvas").className = "canvasNoTap";
+    canvas.className = "canvasNoTap"; isWBdark=false;
 
 } //function focusIframe()
 
@@ -226,6 +231,16 @@ async function focusSeqSource() {
 // }}} framer handling functions
 
 // {{{ draw functions
+
+function toggleWB() {
+    if (isWBdark) {
+        canvas.className = "canvasTap";
+        isWBdark=false;
+    } else { 
+        canvas.className = "canvasWB";
+        isWBdark=true;
+    } //if (isWBdark)
+} //function toggleWB
 
 function toggleShowColors() {
     if (IsColorPaneHidden) {
