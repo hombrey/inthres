@@ -61,7 +61,7 @@ arrayIndex=1;
 while IFS= read -r line
 do
     EVAL=`echo " \"$line\" "`
-    if [[ $EVAL == *"html"* && $EVAL != *"0_Frame"* && $EVAL != *"0_sess"* ]]; then
+    if [[ $EVAL == *"html"* && $EVAL != *"0_"* ]]; then
     echo "        <option value=\"./$line\">leqx</option> " >> 0_FrameX.html
         ((arrayIndex++))
     fi

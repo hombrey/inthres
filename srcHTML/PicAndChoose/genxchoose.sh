@@ -1,5 +1,15 @@
 #!/bin/bash
-ls |sort -n > /tmp/list.txt
+ls |sort -n > /tmp/rawlist.txt
+
+read -p "shuffle? (y/n) " isShuffled
+
+if [[ $isShuffled == "y" ]]; then
+        #mix up the order of the files
+        shuf /tmp/rawlist.txt > /tmp/list.txt
+else
+        cp /tmp/rawlist.txt /tmp/list.txt
+fi
+
 input="/tmp/list.txt"
 
 # extract the source directory from the command used to call this script
@@ -44,7 +54,14 @@ while IFS= read -r line
 do
     EVAL=`echo " \"$line\" "`
     if [[ $EVAL == *"jpg"* || $EVAL == *"png"* || $EVAL == *"gif"* ]]; then
-        echo "        new PromptString(\"$line\",1)," >> x_choose.html
+        if [[ $isShuffled == "y" ]]; then
+                # insert each name of the file and plug in the first character of file as default choice
+                echo "        new PromptString(\"$line\",${line:0:1})," >> x_choose.html
+        else
+                # if unshuffled, use "1" as the default choice
+                echo "        new PromptString(\"$line\",1)," >> x_choose.html
+        fi
+
     fi
 done < "$input"
 
@@ -54,4 +71,5 @@ echo "</body> " >> x_choose.html
 echo "</html> " >> x_choose.html
 
 rm /tmp/list.txt
+rm /tmp/rawlist.txt
 cp -nr $SOURCEDIR/choices . # n option should prevent from overwriting

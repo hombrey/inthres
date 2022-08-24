@@ -1,0 +1,39 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title> 
+    <meta name="author" content="Hombrey">
+    <link rel="stylesheet" href="/m2/Study/HTML/10_inthres/srcHTML/PicAndChoose/styles.css">
+</head>
+
+<body id="myBody">
+    <img class="fullPage" id="backgroundX" src="/m2/Study/HTML/10_inthres/srcHTML/PicAndChoose/img/BG0.png">
+    <div id="srcDir" style="display:none">/m2/Study/HTML/10_inthres/srcHTML/PicAndChoose/</div>
+    <div id="assetDir" style="display:none">./</div>
+    <select class="selectBox" id="dummy"><option>PicAndChoose</option></select>
+    <div class ="grid3" >
+        <div class ="grid3-left" > </div>
+        <div class ="grid3-right" > </div>
+        <img class ="grid3-center" id="mainImg" src="/m2/Study/HTML/10_inthres/srcHTML/PicAndChoose/img/init.png" >
+    </div>
+    <img class="choices" id="choice1" onClick="evalClick(this.id)" 
+         src="./choices/1.png">
+    <img class="choices" id="choice2" onClick="evalClick(this.id)" 
+         src="./choices/2.png">
+    <img class="choices" id="choice3" onClick="evalClick(this.id)" 
+         src="./choices/3.png">
+    <img class="choices" id="choice4" onClick="evalClick(this.id)" 
+         src="./choices/4.png">
+
+    <span class="guide" id="guide1">1</span>
+    <span class="guide" id="guide2">2</span>
+    <span class="guide" id="guide3">3</span>
+    <span class="guide" id="guide4">4</span>
+
+    <script src="/m2/Study/HTML/10_inthres/srcHTML/PicAndChoose/functions.js"></script> 
+    <script> 
+      promptSet = [
+      new PromptString("",0)];
+    </script> 
+</body> 
+</html> 

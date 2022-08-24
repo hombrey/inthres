@@ -19,6 +19,7 @@ let picSet;
 let wavSet;
 let isCanvasVisible=false;
 let isPaused=true;
+let playRate = 1;
 //}}}variable declarations
 
 //{{{event listeners
@@ -29,6 +30,7 @@ window.addEventListener("keydown", evalKeyDown, false); //capture keypress on bu
 function evalKeyDown(evnt) {
     let keyPressed = evnt.keyCode;
     //console.log ("keyUp: ",keyPressed);
+    let rateIncValue = 0.2;
     switch (keyPressed) {
        case 87  : if(!event.shiftKey) parent.postMessage("FocusSeq","*");
                   else parent.postMessage("FocusTool","*"); 
@@ -49,6 +51,20 @@ function evalKeyDown(evnt) {
                   else changeHole (5.0625);
                   break; //key: right
        case 37  : changeHole(0.666); break; //key: left
+    //case 219 : evnt.preventDefault();
+                //playRate -= rateIncValue;
+                //if (playRate < 0.1) playRate = 0.1;
+                //playRate = parseFloat(playRate.toFixed(2));
+                //wavSet[picSet[imgIndex].wav].playbackRate = playRate;
+                ////if (osdTimeout > 0) showOSD(wavSet[picSet[imgIndex].wav].playbackRate);
+                //break; //'['
+    //case 221 : evnt.preventDefault();
+                //playRate += rateIncValue;
+                //if (playRate > 16) playRate = 16;
+                //playRate = parseFloat(playRate.toFixed(2));
+                //wavSet[picSet[imgIndex].wav].playbackRate = playRate;
+                ////if (osdTimeout > 0) showOSD(wavSet[picSet[imgIndex].wav].playbackRate);
+                //break; // ']'
        case 32  : evnt.preventDefault(); togglePlay() ;break; //key: <spacebar>
         default : return;
     } //switch (keyPressed)
@@ -125,6 +141,7 @@ async function initWin() {
     pauseIndicator = document.getElementById('pauseIndicator');
     //document.getElementById("dummy").focus(); //dummy select element that grabs the focus of the iframe
 
+    muteScene(1);
 } //function initWin()
 
 //}}}window init
@@ -172,8 +189,28 @@ function toggleCanvas() {
 function showAlt() {
     let imgSrc =(assetDir+"alt/"+picSet[imgIndex].src);
     bgX.src = imgSrc;
-    tingSound.start();
+
+    // stay on current scene if "alt" is not found
+    bgX.onerror = function ()  {
+        muteScene(imgIndex);
+    } //bgX.onerror = function () 
+
+        tingSound.start();
+
 } //function showAlt()
+
+function muteScene(chosenIndx) {
+
+    imgIndex=chosenIndx;
+
+    if (imgIndex<1) imgIndex = picSet.length-2;
+    else if (imgIndex>picSet.length-2) imgIndex = 1;
+    
+    let imgSrc =(assetDir+picSet[imgIndex].src);
+
+    bgX.src = imgSrc;
+} //function muteScene(sceneNum)
+
 function nextScene(chosenIndx) {
     //stop associated audio whenever the picture changes. Do this only if ./wav directory is populated
     if (wavSet.length>2) wavSet[picSet[imgIndex].wav].stop(); 
@@ -189,8 +226,8 @@ function nextScene(chosenIndx) {
     let imgSrc =(assetDir+picSet[imgIndex].src);
 
     bgX.src = imgSrc;
-    if (isCanvasVisible) jingSound.start( );
-            else pickSound.start( );
+    if (isCanvasVisible) jingSound.start();
+            else pickSound.start();
 } //function changeScene(sceneNum)
 
 function togglePlay() {
