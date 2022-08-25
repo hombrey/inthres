@@ -1,5 +1,6 @@
 //{{{variable declarations
 "use strict";
+let isDebug=true;
 let bgX;
 let scaleX, scaleY;
 let pickSound;
@@ -8,10 +9,17 @@ let errSound;
 let cardSound;
 let tokenInx=0;
 let tokens;
+let activeTokens;
 let steps;
-let lastStep;
-let stepL, stepW;
-let scalL, scalW;
+let stepMax, tokenMax;
+let boardx,boardy; //unscaled
+let boardX,boardY; //scaled
+let boardW, boardH;
+let steph, stepw; //unscaled
+let stepH, stepW; //scaled
+let sourceDir, assetDir;
+let tokenNow=0,stepNow;
+let optionHandle;
 
 //}}}variable declarations
 
@@ -31,8 +39,8 @@ function evalKeyDown(evnt) {
         case 51 : selectToken("pick",3); break; //key: 3
         case 52 : selectToken("pick",4); break; //key: 4
         case 53 : selectToken("pick",5); break; //key: 5
-        case 39 : stepToken(tokenInx,1); break; //key: right
-        case 37 : stepToken(tokenInx,-1); reak; //key: left
+        case 39 : stepToken(tokenNow,1); break; //key: right
+        case 37 : stepToken(tokenNow,-1); break; //key: left
         case 40 : selectToken("next",1); break; //key: <down>
         case 38 : selectToken("next",-1); break; //key: <up>
         case 190 : break; //key: <period> to show/hide pattern
@@ -50,7 +58,8 @@ function evalMessage (evnt) {
     if (data == "FocusIframe") {
         //console.log("focusDummy");
         document.getElementById('dummy').focus();
-    }
+    } //focusIframe
+
 } //function evalMessage(event)
 
 //}}}event listeners
@@ -77,27 +86,121 @@ async function initWin() {
     scaleX = bgX.clientWidth/bgX.naturalWidth;
     scaleY = bgX.clientHeight/bgX.naturalHeight;
 
-    await delay (30);
+    await delay (80);
 
     //defined in HTML
+    //Get project source
+    sourceDir = document.getElementById("srcdir").innerHTML;
+    //Get location of lesson assets
+    assetDir = document.getElementById("assetdir").innerHTML;
     //populate tokens and steps arrays and define unscaled step offsets
     stepsAndTokens();
 
+    boardX = Math.round (scaleX*boardx);
+    boardY = Math.round (scaleY*boardy);
+    boardW = Math.round (scaleX*steps[1].naturalWidth);
+    boardH = Math.round (scaleY*steps[1].naturalHeight);
+
+    //place board steps
+   for (let sInx=0; sInx<stepMax+1; sInx++) {
+
+        //visually, all steps are positioned at the the same location of the backboard
+        insertCss ("#step"+sInx+" {width: "+ boardW +"px; height: "+ boardH +"px;}");
+        insertCss ("#step"+sInx+"{left: "+ boardX +"px; top: "+ boardY +"px;}");
+       
+        //adjust size and positions of steps
+        steps[sInx].W = Math.round (scaleX*stepw);
+        steps[sInx].H = Math.round (scaleY*steph);
+        steps[sInx].X = Math.round (scaleX*steps[sInx].posx*stepw)+boardX;
+        steps[sInx].Y = Math.round (scaleY*steps[sInx].posy*stepw)+boardY;
+        
+   } //for (let sInx=1; sInx<stepMax+1; sInx++)
+
+   //adjust size,positions, and offsets  of steps
+   for (let tInx=1; tInx<tokenMax+1; tInx++) {
+
+        tokens[tInx].W = Math.round (scaleX*tokens[tInx].naturalWidth);
+        tokens[tInx].H = Math.round (scaleY*tokens[tInx].naturalHeight);
+        tokens[tInx].offX = Math.round (scaleX*tokens[tInx].offx);
+        tokens[tInx].offY = Math.round (scaleY*tokens[tInx].offy);
+        
+        insertCss ("#token"+tInx+" {width: "+ tokens[tInx].W +"px; height: "+ tokens[tInx].H +"px;}");
+
+        insertCss ("#token"+tInx+"{"+
+            " left: "+(steps[tokens[tInx].onStep].X+tokens[tInx].offX) +"px;"+
+            " top: "+ (steps[tokens[tInx].onStep].Y+tokens[tInx].offY) +"px;"+
+        "}"); //insertCss "#token"
+
+   } //for (let tInx=1; sInx<tokenMax+1; tInx++)
+
+        optionHandle = document.getElementById('optionText');
 } //function initWin()
 
 //}}}initializations
 
 //{{{handler functions
 
-selectToken(action,tokenInt) {
+function clickStep(clicked_id) {
+    deblog(clicked_id);
+} //clickStep
+
+function clickToken(clicked_id) {
 
 } //selectToken(action,tokenInt)
 
-stepToken(tokenInt, moveBy) {
+function selectToken(action,tokenInt) {
+
+    var searchActive;
+    var countSearch=0;
+    //deblog ("tokenMax:"+tokenMax);
+
+    switch (action) {
+       case "pick": tokenNow = tokenInt;
+                    break;
+        case "next": var searchIndex=tokenNow;
+                    do { countSearch++;
+                        searchIndex=searchIndex+tokenInt;
+                            if (searchIndex>tokenMax) searchIndex = 1; 
+                            if (searchIndex<1) searchIndex = tokenMax; 
+                        searchActive = activeTokens[searchIndex]; 
+                        //deblog("search:"+searchActive);
+                    } while ( (searchActive == 0) && (countSearch<tokenMax+1) )//case "next":do 
+                    tokenNow = searchActive;
+                    break;
+        default : return;
+    } //switch (action)
+
+   optionHandle.innerHTML="player:"+tokenNow; 
+
+} //selectToken(action,tokenInt)
+
+function stepToken(tokenInt, moveBy) {
+
+    //if no token has been selected, do nothing
+    if (tokenInt == 0) return;
+
+    tokens[tokenInt].onStep=tokens[tokenInt].onStep+moveBy;
+        if (tokens[tokenInt].onStep<0) tokens[tokenInt].onStep=0;
+        if (tokens[tokenInt].onStep>stepMax) tokens[tokenInt].onStep=stepMax;
+
+    stepNow=tokens[tokenInt].onStep; 
+    
+    //include token in active array if it's visible on the board
+    if (stepNow>0) 
+        activeTokens[tokenInt]=tokenInt;
+    else 
+        activeTokens[tokenInt]=0;
+
+    //deblog ("stepNow: "+stepNow);
+
+    insertCss ("#token"+tokenInt+"{"+
+        " left: "+(steps[tokens[tokenInt].onStep].X+tokens[tokenInt].offX) +"px;"+
+        " top: "+ (steps[tokens[tokenInt].onStep].Y+tokens[tokenInt].offY) +"px;"+
+    "}"); //insertCss "#token"
 
 } //stepToken(tokenInt, moveBy)
 
-cycleSee(tokenInt) {
+function cycleSee(tokenInt) {
 
 } //cycleSee(tokenInt)
 
@@ -141,5 +244,9 @@ function delay(n) {
                         }, n);
             });
 }//function delay()
+
+function deblog(msgLog) {
+    if (isDebug) console.log(msgLog);
+} //function deblog(msgLog)
 
 //}}}helper functions

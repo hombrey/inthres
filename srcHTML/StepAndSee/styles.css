@@ -16,9 +16,20 @@ body {
     z-index: 0;
 } /*fullPage*/
 
+.stepClass {
+    position: fixed;
+    z-index: 1;
+} /*.stepClass*/
+
+.tokenClass {
+    position: fixed;
+    z-index: 2;
+} /*.stepClass*/
+
 .selectBox {
     position: fixed;
     overflow-x: hidden;
+    font-size: 1.5em;
     top: 2vh;
     left: 50vw;
     z-index:0;
@@ -33,6 +44,10 @@ body {
     height: 80%;
     transition:  150ms;
 } /*#mainImg*/
+
+#step1{
+    z-index:1;
+}
 #myBody {
 
 } /*#myBody*/
