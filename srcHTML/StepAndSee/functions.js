@@ -19,6 +19,7 @@ let steph, stepw; //unscaled
 let stepH, stepW; //scaled
 let sourceDir, assetDir;
 let tokenNow=0,stepNow;
+let cycleNow=0;
 let optionHandle;
 
 //}}}variable declarations
@@ -44,7 +45,7 @@ function evalKeyDown(evnt) {
         case 40 : selectToken("next",1); break; //key: <down>
         case 38 : selectToken("next",-1); break; //key: <up>
         case 190 : break; //key: <period> to show/hide pattern
-        case 188 : cycleSee(tokenInx); break; //key: <comma> to show alt image
+        case 188 : cycleSee(tokenNow); break; //key: <comma> to show alt image
         default : return;
     } //switch (keyPressed)
 } //evalKey(event)
@@ -153,6 +154,8 @@ function selectToken(action,tokenInt) {
     var searchActive;
     var countSearch=0;
     //deblog ("tokenMax:"+tokenMax);
+    
+    resetSeeCycle(tokenNow);
 
     switch (action) {
        case "pick": tokenNow = tokenInt;
@@ -201,8 +204,33 @@ function stepToken(tokenInt, moveBy) {
 } //stepToken(tokenInt, moveBy)
 
 function cycleSee(tokenInt) {
+    cycleNow++;
+    if (cycleNow>2) cycleNow = 0;
+
+    switch (cycleNow) {
+    case 0 : steps[tokens[tokenInt].onStep].src=assetDir+"2a_step/"+tokens[tokenInt].onStep+".webp";
+            insertCss ("#step"+tokens[tokenInt].onStep+"{z-index: 1;}");
+             break;
+    case 1 : steps[tokens[tokenInt].onStep].src=assetDir+"2b_step/"+tokens[tokenInt].onStep+".webp";
+             //steps[tokens[tokenInt].onStep].className = "stepSeeClass";
+            insertCss ("#step"+tokens[tokenInt].onStep+"{z-index: 3;}");
+             break;
+    case 2 : steps[tokens[tokenInt].onStep].src=assetDir+"2c_step/"+tokens[tokenInt].onStep+".webp";
+             break;
+    default: return;
+    } //switch (cycleNow)
+
+    steps[tokens[tokenInt].onStep].onerror = function ()  {
+        resetSeeCycle(tokenInt);
+    } //bgX.onerror = function () 
 
 } //cycleSee(tokenInt)
+
+function resetSeeCycle(tokenInt) {
+    cycleNow = 0;
+    steps[tokens[tokenInt].onStep].src=assetDir+"2a_step/"+tokens[tokenInt].onStep+".webp";
+    insertCss ("#step"+tokens[tokenInt].onStep+"{z-index: 1;}");
+} //function resetSeeCycle(tokenNow)
 
 //}}}handler functions
 

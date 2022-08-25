@@ -21,6 +21,11 @@ body {
     z-index: 1;
 } /*.stepClass*/
 
+.stepSeeClass {
+    position: fixed;
+    z-index: 4;
+} /*.stepClass*/
+
 .tokenClass {
     position: fixed;
     z-index: 2;
