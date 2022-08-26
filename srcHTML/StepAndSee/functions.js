@@ -18,9 +18,11 @@ let boardW, boardH;
 let steph, stepw; //unscaled
 let stepH, stepW; //scaled
 let sourceDir, assetDir;
-let tokenNow=0,stepNow;
+let tokenNow=0,stepNow=0;
 let cycleNow=0;
 let optionHandle;
+let theDie;
+let isDieSpinning=false;
 
 //}}}variable declarations
 
@@ -30,7 +32,7 @@ window.addEventListener("resize", initWin);
 window.addEventListener("keydown", evalKeyDown, false); //capture keypress on bubbling (false) phase
 function evalKeyDown(evnt) {
     let keyPressed = evnt.keyCode;
-    //console.log ("keyDn: ",keyPressed);
+    //deblog ("keyDn: "+keyPressed);
     switch (keyPressed) {
        case 87  : if(!event.shiftKey) parent.postMessage("FocusSeq","*");
                   else parent.postMessage("FocusTool","*"); 
@@ -44,8 +46,9 @@ function evalKeyDown(evnt) {
         case 37 : stepToken(tokenNow,-1); break; //key: left
         case 40 : selectToken("next",1); break; //key: <down>
         case 38 : selectToken("next",-1); break; //key: <up>
+        case 68 : toggleDieSpin(); break; //key: d
         case 190 : break; //key: <period> to show/hide pattern
-        case 188 : cycleSee(tokenNow); break; //key: <comma> to show alt image
+        case 188 : cycleSee(stepNow); break; //key: <comma> to show alt image
         default : return;
     } //switch (keyPressed)
 } //evalKey(event)
@@ -78,7 +81,7 @@ const checkElement = async selector => {
 //make sure elements are loaded before proceeding
 async function initWin() {
 //document.getElementById('backgroundX').onload = async function () { //wait for element before loading
-    await delay (80); 
+    await delay (20); 
     //check to see if element is loaded
     checkElement('backgroundX').then((selector) => { console.log(selector); });
     //Get a reference to the canvas
@@ -87,7 +90,7 @@ async function initWin() {
     scaleX = bgX.clientWidth/bgX.naturalWidth;
     scaleY = bgX.clientHeight/bgX.naturalHeight;
 
-    await delay (80);
+    await delay (100);
 
     //defined in HTML
     //Get project source
@@ -95,12 +98,21 @@ async function initWin() {
     //Get location of lesson assets
     assetDir = document.getElementById("assetdir").innerHTML;
     //populate tokens and steps arrays and define unscaled step offsets
-    stepsAndTokens();
-
+    arrangeBoard();
+    //
     boardX = Math.round (scaleX*boardx);
     boardY = Math.round (scaleY*boardy);
     boardW = Math.round (scaleX*steps[1].naturalWidth);
     boardH = Math.round (scaleY*steps[1].naturalHeight);
+
+    //deblog ("x:"+theDie.x);
+    theDie.X = Math.round (scaleX*theDie.placex);
+    theDie.Y = Math.round (scaleY*theDie.placey);
+    theDie.W = Math.round (scaleX*theDie.naturalWidth);
+    theDie.H = Math.round (scaleY*theDie.naturalHeight);
+
+    insertCss ("#die1 {width: "+ theDie.W +"px; height: "+ theDie.H +"px;}");
+    insertCss ("#die1 {left: "+ theDie.X +"px; top: "+ theDie.Y +"px;}");
 
     //place board steps
    for (let sInx=0; sInx<stepMax+1; sInx++) {
@@ -143,10 +155,12 @@ async function initWin() {
 
 function clickStep(clicked_id) {
     deblog(clicked_id);
+    cycleSee(stepNow);
 } //clickStep
 
 function clickToken(clicked_id) {
-
+    let extractIdNum = (clicked_id.replace("token",""));
+    selectToken("pick",extractIdNum);
 } //selectToken(action,tokenInt)
 
 function selectToken(action,tokenInt) {
@@ -155,7 +169,6 @@ function selectToken(action,tokenInt) {
     var countSearch=0;
     //deblog ("tokenMax:"+tokenMax);
     
-    resetSeeCycle(tokenNow);
 
     switch (action) {
        case "pick": tokenNow = tokenInt;
@@ -173,19 +186,25 @@ function selectToken(action,tokenInt) {
         default : return;
     } //switch (action)
 
+    //reset step before specifying a new "stepNow"
+   resetSeeCycle(stepNow);
+   stepNow=tokens[tokenNow].onStep; 
+
    optionHandle.innerHTML="player:"+tokenNow; 
 
 } //selectToken(action,tokenInt)
 
 function stepToken(tokenInt, moveBy) {
 
-    //if no token has been selected, do nothing
+    //if no token has ever been selected yet, do nothing
     if (tokenInt == 0) return;
 
     tokens[tokenInt].onStep=tokens[tokenInt].onStep+moveBy;
         if (tokens[tokenInt].onStep<0) tokens[tokenInt].onStep=0;
         if (tokens[tokenInt].onStep>stepMax) tokens[tokenInt].onStep=stepMax;
 
+    //reset step before specifying a new "stepNow"
+    resetSeeCycle(stepNow);
     stepNow=tokens[tokenInt].onStep; 
     
     //include token in active array if it's visible on the board
@@ -203,35 +222,47 @@ function stepToken(tokenInt, moveBy) {
 
 } //stepToken(tokenInt, moveBy)
 
-function cycleSee(tokenInt) {
+function cycleSee(stepInt) {
     cycleNow++;
     if (cycleNow>2) cycleNow = 0;
 
     switch (cycleNow) {
-    case 0 : steps[tokens[tokenInt].onStep].src=assetDir+"2a_step/"+tokens[tokenInt].onStep+".webp";
-            insertCss ("#step"+tokens[tokenInt].onStep+"{z-index: 1;}");
+    case 0 : resetSeeCycle(stepInt);
              break;
-    case 1 : steps[tokens[tokenInt].onStep].src=assetDir+"2b_step/"+tokens[tokenInt].onStep+".webp";
-             //steps[tokens[tokenInt].onStep].className = "stepSeeClass";
-            insertCss ("#step"+tokens[tokenInt].onStep+"{z-index: 3;}");
+    case 1 : steps[stepInt].src=assetDir+"2b_step/"+stepInt+".webp";
+             steps[stepInt].className = "stepSeeClass";
              break;
-    case 2 : steps[tokens[tokenInt].onStep].src=assetDir+"2c_step/"+tokens[tokenInt].onStep+".webp";
+    case 2 : steps[stepInt].src=assetDir+"2c_step/"+stepInt+".webp";
              break;
     default: return;
     } //switch (cycleNow)
 
-    steps[tokens[tokenInt].onStep].onerror = function ()  {
-        resetSeeCycle(tokenInt);
+    steps[stepNow].onerror = function ()  {
+        resetSeeCycle(stepInt);
     } //bgX.onerror = function () 
 
 } //cycleSee(tokenInt)
 
-function resetSeeCycle(tokenInt) {
+function resetSeeCycle(stepInt) {
     cycleNow = 0;
-    steps[tokens[tokenInt].onStep].src=assetDir+"2a_step/"+tokens[tokenInt].onStep+".webp";
-    insertCss ("#step"+tokens[tokenInt].onStep+"{z-index: 1;}");
+    steps[stepInt].src=assetDir+"2a_step/"+stepInt+".webp";
+    steps[stepInt].className = "stepClass";
+    //insertCss ("#step"+tokens[tokenInt].onStep+"{z-index: 1;}");
+    //
 } //function resetSeeCycle(tokenNow)
-
+function toggleDieSpin() {
+    var dieNum;
+    if (isDieSpinning)  {
+        //get any integer from 1 to TheDie.maxDie
+        dieNum = Math.floor(Math.random()*(theDie.maxDie))+1;
+        theDie.src=sourceDir+"img/die"+dieNum+".webp";
+        if (theDie.auto) stepToken(tokenNow,dieNum)
+        isDieSpinning=false
+    } else { //of (isDieSpinning)
+        theDie.src=sourceDir+"img/dieSpin.webp";
+        isDieSpinning=true;
+    } //if (isDieSpinning) 
+} //function toggleDieSpin()
 //}}}handler functions
 
 //{{{helper functions

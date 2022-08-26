@@ -16,6 +16,11 @@ body {
     z-index: 0;
 } /*fullPage*/
 
+.dieClass {
+    position: fixed;
+    z-index: 1;
+} /*.stepClass*/
+
 .stepClass {
     position: fixed;
     z-index: 1;
@@ -29,6 +34,7 @@ body {
 .tokenClass {
     position: fixed;
     z-index: 2;
+    transition:  150ms;
 } /*.stepClass*/
 
 .selectBox {
@@ -44,15 +50,6 @@ body {
 
 /*{{{id selector*/
 
-#mainImg {
-    width: 70%;
-    height: 80%;
-    transition:  150ms;
-} /*#mainImg*/
-
-#step1{
-    z-index:1;
-}
 #myBody {
 
 } /*#myBody*/
