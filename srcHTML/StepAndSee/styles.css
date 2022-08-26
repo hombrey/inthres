@@ -35,6 +35,14 @@ body {
     position: fixed;
     z-index: 2;
     transition:  150ms;
+    transform: scale(1,1);
+} /*.stepClass*/
+
+.tokenActiveClass {
+    position: fixed;
+    z-index: 3;
+    transition:  150ms;
+    transform: scale(1.35,1.35);
 } /*.stepClass*/
 
 .selectBox {

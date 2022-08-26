@@ -4,6 +4,7 @@ let isDebug=true;
 let bgX;
 let scaleX, scaleY;
 let pickSound;
+let placeSound;
 let tingSound;
 let errSound;
 let cardSound;
@@ -49,6 +50,7 @@ function evalKeyDown(evnt) {
         case 68 : toggleDieSpin(); break; //key: d
         case 190 : break; //key: <period> to show/hide pattern
         case 188 : cycleSee(stepNow); break; //key: <comma> to show alt image
+        case 32  : evnt.preventDefault(); playStep(stepNow) ;break; //key: <spacebar>
         default : return;
     } //switch (keyPressed)
 } //evalKey(event)
@@ -122,10 +124,10 @@ async function initWin() {
         insertCss ("#step"+sInx+"{left: "+ boardX +"px; top: "+ boardY +"px;}");
        
         //adjust size and positions of steps
-        steps[sInx].W = Math.round (scaleX*stepw);
-        steps[sInx].H = Math.round (scaleY*steph);
+        stepW = Math.round (scaleX*stepw);
+        stepH = Math.round (scaleY*steph);
         steps[sInx].X = Math.round (scaleX*steps[sInx].posx*stepw)+boardX;
-        steps[sInx].Y = Math.round (scaleY*steps[sInx].posy*stepw)+boardY;
+        steps[sInx].Y = Math.round (scaleY*steps[sInx].posy*steph)+boardY;
         
    } //for (let sInx=1; sInx<stepMax+1; sInx++)
 
@@ -140,13 +142,19 @@ async function initWin() {
         insertCss ("#token"+tInx+" {width: "+ tokens[tInx].W +"px; height: "+ tokens[tInx].H +"px;}");
 
         insertCss ("#token"+tInx+"{"+
-            " left: "+(steps[tokens[tInx].onStep].X+tokens[tInx].offX) +"px;"+
-            " top: "+ (steps[tokens[tInx].onStep].Y+tokens[tInx].offY) +"px;"+
+            " left: "+(steps[tokens[tInx].onStep].X+tokens[tInx].offx) +"px;"+
+            " top: "+ (steps[tokens[tInx].onStep].Y+tokens[tInx].offy) +"px;"+
         "}"); //insertCss "#token"
 
    } //for (let tInx=1; sInx<tokenMax+1; tInx++)
 
         optionHandle = document.getElementById('optionText');
+
+    pickSound = new sound(sourceDir+"wav/pick.mp3");
+    placeSound = new sound(sourceDir+"wav/place.mp3");
+    cardSound = new sound(sourceDir+"wav/card.mp3");
+
+
 } //function initWin()
 
 //}}}initializations
@@ -154,7 +162,7 @@ async function initWin() {
 //{{{handler functions
 
 function clickStep(clicked_id) {
-    deblog(clicked_id);
+    //deblog(clicked_id);
     cycleSee(stepNow);
 } //clickStep
 
@@ -169,6 +177,9 @@ function selectToken(action,tokenInt) {
     var countSearch=0;
     //deblog ("tokenMax:"+tokenMax);
     
+    //reset previous token size
+    //insertCss ("#token"+tokenNow+" {width: "+ tokens[tokenNow].W +"px; height: "+ tokens[tokenNow].H +"px;}");
+    tokens[tokenNow].className="tokenClass";
 
     switch (action) {
        case "pick": tokenNow = tokenInt;
@@ -186,9 +197,14 @@ function selectToken(action,tokenInt) {
         default : return;
     } //switch (action)
 
+    //enlarge active token
+    //insertCss ("#token"+tokenNow+" {width: "+ tokens[tokenNow].W*1.35 +"px; height: "+ tokens[tokenNow].H*1.35 +"px;}");
+    tokens[tokenNow].className="tokenActiveClass";
+
     //reset step before specifying a new "stepNow"
    resetSeeCycle(stepNow);
    stepNow=tokens[tokenNow].onStep; 
+   resetDie();
 
    optionHandle.innerHTML="player:"+tokenNow; 
 
@@ -216,9 +232,11 @@ function stepToken(tokenInt, moveBy) {
     //deblog ("stepNow: "+stepNow);
 
     insertCss ("#token"+tokenInt+"{"+
-        " left: "+(steps[tokens[tokenInt].onStep].X+tokens[tokenInt].offX) +"px;"+
-        " top: "+ (steps[tokens[tokenInt].onStep].Y+tokens[tokenInt].offY) +"px;"+
+        " left: "+(steps[stepNow].X+tokens[tokenInt].offX) +"px;"+
+        " top: "+ (steps[stepNow].Y+tokens[tokenInt].offY) +"px;"+
     "}"); //insertCss "#token"
+
+    pickSound.start();
 
 } //stepToken(tokenInt, moveBy)
 
@@ -230,9 +248,11 @@ function cycleSee(stepInt) {
     case 0 : resetSeeCycle(stepInt);
              break;
     case 1 : steps[stepInt].src=assetDir+"2b_step/"+stepInt+".webp";
+             steps[stepInt].prompt.sound.src=assetDir+"wav/2b/step"+stepInt+".mp3";
              steps[stepInt].className = "stepSeeClass";
              break;
     case 2 : steps[stepInt].src=assetDir+"2c_step/"+stepInt+".webp";
+             steps[stepInt].prompt.sound.src=assetDir+"wav/2c/step"+stepInt+".mp3";
              break;
     default: return;
     } //switch (cycleNow)
@@ -246,10 +266,22 @@ function cycleSee(stepInt) {
 function resetSeeCycle(stepInt) {
     cycleNow = 0;
     steps[stepInt].src=assetDir+"2a_step/"+stepInt+".webp";
+    steps[stepInt].prompt.sound.src=assetDir+"wav/2a/step"+stepInt+".mp3";
     steps[stepInt].className = "stepClass";
     //insertCss ("#step"+tokens[tokenInt].onStep+"{z-index: 1;}");
     //
 } //function resetSeeCycle(tokenNow)
+
+function playStep(stepInt) {
+
+    steps[stepInt].prompt.start();
+
+} //function playStep(stpeInt)
+
+function resetDie() {
+        theDie.src=sourceDir+"img/die"+0+".webp";
+} //function.resetDie()
+
 function toggleDieSpin() {
     var dieNum;
     if (isDieSpinning)  {

@@ -20,7 +20,7 @@ echo "    <div id=\"srcdir\" style=\"display:none;\">$SOURCEDIR/</div>" >> x_Ste
 echo "    <div id=\"assetdir\" style=\"display:none\">./</div>" >> x_StepSee.html
 echo "" >> x_StepSee.html
 echo "    <img class=\"fullPage\" id=\"backgroundX\" src=\"$SOURCEDIR/img/BG0.png\">" >> x_StepSee.html
-echo "    <img class=\"dieClass\" id=\"die1\" onClick=\"toggleDieSpin()\" src=\"../srcHTML/StepAndSee/img/die0.webp\">" >> x_StepSee.html
+echo "    <img class=\"dieClass\" id=\"die1\" onClick=\"toggleDieSpin()\" src=\"$SOURCEDIR/img/die0.webp\">" >> x_StepSee.html
 echo "    <select class=\"selectBox\" id=\"dummy\"><option id=\"optionText\">StepAndSee</option></select>" >> x_StepSee.html
 echo "    <script src=\"$SOURCEDIR/functions.js\"></script> " >> x_StepSee.html
 
