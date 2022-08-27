@@ -24,6 +24,9 @@ let cycleNow=0;
 let optionHandle;
 let theDie;
 let isDieSpinning=false;
+let isPenToolHidden=true;
+let isMute=true;
+let helpHandle;
 
 //}}}variable declarations
 
@@ -31,6 +34,28 @@ let isDieSpinning=false;
 window.onload = initWin();
 window.addEventListener("resize", initWin);
 window.addEventListener("keydown", evalKeyDown, false); //capture keypress on bubbling (false) phase
+window.addEventListener("keyup", evalKeyUp, false); //capture keypress on bubbling (false) phase
+
+function evalKeyUp(evnt) {
+    let keyReleased = evnt.keyCode;
+    switch (keyReleased) {
+        case 68 : dieSpin("off"); break; //key: d
+
+        case 8 : evnt.preventDefault();
+                 if(!event.shiftKey) {
+                     parent.postMessage("draw","*"); 
+                     pentool("hide");
+                 } else { parent.postMessage("noDraw","*"); 
+                     pentool("hide");
+                 } //if shiftkeya; 
+                 break; //key: <backspace>
+
+        case 112  : evnt.preventDefault(); helpHandle.className="hiddenHelp"; break; //key: F1
+
+        default : return;
+    } //switch (keyPressed)
+}//evalKeyUp
+
 function evalKeyDown(evnt) {
     let keyPressed = evnt.keyCode;
     //deblog ("keyDn: "+keyPressed);
@@ -43,14 +68,28 @@ function evalKeyDown(evnt) {
         case 51 : selectToken("pick",3); break; //key: 3
         case 52 : selectToken("pick",4); break; //key: 4
         case 53 : selectToken("pick",5); break; //key: 5
-        case 39 : stepToken(tokenNow,1); break; //key: right
-        case 37 : stepToken(tokenNow,-1); break; //key: left
-        case 40 : selectToken("next",1); break; //key: <down>
-        case 38 : selectToken("next",-1); break; //key: <up>
-        case 68 : toggleDieSpin(); break; //key: d
-        case 190 : break; //key: <period> to show/hide pattern
+        //case 39 : stepToken(tokenNow,1); break; //key: right
+        //case 37 : stepToken(tokenNow,-1); break; //key: left
+        //case 40 : selectToken("next",1); break; //key: <down>
+        //case 38 : selectToken("next",-1); break; //key: <up>
+        case 83 : if(!event.shiftKey) stepToken(tokenNow,1); 
+                  if(event.shiftKey) stepToken(tokenNow,-1); 
+                  break; //key: s
+        case 78 : selectToken("next",1); break; //key: n 
+        //case 68 : toggleDieSpin(); break; //key: d
+        case 68 : dieSpin("on"); break; //key: d
+        case 65 : activateToken(); break; //key: a
+        case 88 : deactivateToken(tokenNow); break; //key: x
+        case 190 : break; //key: <period> 
         case 188 : cycleSee(stepNow); break; //key: <comma> to show alt image
         case 32  : evnt.preventDefault(); playStep(stepNow) ;break; //key: <spacebar>
+        case 112  : evnt.preventDefault(); helpHandle.className="unhiddenHelp"; break; //key: F1
+
+        case 8 : evnt.preventDefault(); 
+                    parent.postMessage("noDraw","*"); 
+                    pentool("show");
+                break; //key: <backspace>
+
         default : return;
     } //switch (keyPressed)
 } //evalKey(event)
@@ -141,6 +180,7 @@ async function initWin() {
         
         insertCss ("#token"+tInx+" {width: "+ tokens[tInx].W +"px; height: "+ tokens[tInx].H +"px;}");
 
+        //physically move all tokens outside the viewing area (they're all on step 0)
         insertCss ("#token"+tInx+"{"+
             " left: "+(steps[tokens[tInx].onStep].X+tokens[tInx].offx) +"px;"+
             " top: "+ (steps[tokens[tInx].onStep].Y+tokens[tInx].offy) +"px;"+
@@ -150,11 +190,18 @@ async function initWin() {
 
         optionHandle = document.getElementById('optionText');
 
+    createHelpWindow();
+
     pickSound = new sound(sourceDir+"wav/pick.mp3");
     placeSound = new sound(sourceDir+"wav/place.mp3");
     cardSound = new sound(sourceDir+"wav/card.mp3");
 
+    createPentool();
 
+    //automatically call first token
+    isMute=true;
+    activateToken();
+    isMute=false;
 } //function initWin()
 
 //}}}initializations
@@ -170,6 +217,44 @@ function clickToken(clicked_id) {
     let extractIdNum = (clicked_id.replace("token",""));
     selectToken("pick",extractIdNum);
 } //selectToken(action,tokenInt)
+
+function activateToken () {
+    for (let tInx=1; tInx<=tokenMax; tInx++) {
+        
+        //if inactive token is found
+        if (activeTokens[tInx]==0) {
+            activeTokens[tInx]=tInx;
+            selectToken("pick",tInx);
+            stepToken(tokenNow,1);
+            tInx=tokenMax+1; //set to exit the for loop 
+        } //if (ActiveTokens[tInx]==0)
+
+    } //for (let tInx=1; tInx<=tokenMax; tInx++)
+} //function activateToken ()
+
+function deactivateToken (tokenInt) {
+    //move token to step 0
+    tokens[tokenInt].onStep = 0; 
+   
+    //physically move to step 0
+    insertCss ("#token"+tokenInt+"{"+
+        " left: "+(steps[0].X+tokens[tokenInt].offX) +"px;"+
+        " top: "+ (steps[0].Y+tokens[tokenInt].offY) +"px;"+
+    "}"); //insertCss "#token"
+
+    //update the activeToken array
+    activeTokens[tokenInt]=0; 
+  
+    //go to an active token
+     for (let tInx=1; tInx<=tokenMax; tInx++) {
+        //if an active token is found
+        if (activeTokens[tInx]>0) {
+            selectToken("pick",tInx);
+            tInx=tokenMax+1; //set to exit the for loop 
+        } //if (ActiveTokens[tInx]==0)
+    } //for (let tInx=1; tInx<=tokenMax; tInx++)   
+
+} //function deactivateToken (tokenInt)
 
 function selectToken(action,tokenInt) {
 
@@ -216,7 +301,7 @@ function stepToken(tokenInt, moveBy) {
     if (tokenInt == 0) return;
 
     tokens[tokenInt].onStep=tokens[tokenInt].onStep+moveBy;
-        if (tokens[tokenInt].onStep<0) tokens[tokenInt].onStep=0;
+        if (tokens[tokenInt].onStep<1) tokens[tokenInt].onStep=1;
         if (tokens[tokenInt].onStep>stepMax) tokens[tokenInt].onStep=stepMax;
 
     //reset step before specifying a new "stepNow"
@@ -236,7 +321,7 @@ function stepToken(tokenInt, moveBy) {
         " top: "+ (steps[stepNow].Y+tokens[tokenInt].offY) +"px;"+
     "}"); //insertCss "#token"
 
-    pickSound.start();
+    if(!isMute) pickSound.start();
 
 } //stepToken(tokenInt, moveBy)
 
@@ -282,6 +367,22 @@ function resetDie() {
         theDie.src=sourceDir+"img/die"+0+".webp";
 } //function.resetDie()
 
+function dieSpin(action) {
+    var dieNum;
+    switch (action) {
+    case "on" :
+                theDie.src=sourceDir+"img/dieSpin.webp";
+                break;
+    case "off" :
+                //get any integer from 1 to TheDie.maxDie
+                dieNum = Math.floor(Math.random()*(theDie.maxDie))+1;
+                theDie.src=sourceDir+"img/die"+dieNum+".webp";
+                if (theDie.auto) stepToken(tokenNow,dieNum)
+                break;
+    } //switch (action)
+    isDieSpinning=false
+} //function dieSpin
+
 function toggleDieSpin() {
     var dieNum;
     if (isDieSpinning)  {
@@ -296,6 +397,89 @@ function toggleDieSpin() {
     } //if (isDieSpinning) 
 } //function toggleDieSpin()
 //}}}handler functions
+
+//{{{draw functions
+function createHelpWindow() {
+    helpHandle = document.createElement('iframe');
+    helpHandle.setAttribute('id','myHelpFrame');
+    helpHandle.setAttribute('class','hiddenHelp');
+    helpHandle.setAttribute('src',sourceDir+'help.html');
+    document.body.appendChild(helpHandle);
+} //function createHelpWindow()
+
+function createPentool() {
+
+    const divtoolC = document.createElement('div');
+    divtoolC.setAttribute('id','pentool');
+    divtoolC.setAttribute('class','hiddenTool');
+    document.body.appendChild(divtoolC);
+
+    const undoButtonC = document.createElement('button');
+    undoButtonC.setAttribute('id','undoButton'); undoButtonC.setAttribute('class','stroke-color');
+    undoButtonC.setAttribute('onclick','drawRestore()');
+    undoButtonC.innerHTML="Z";
+    divtoolC.appendChild(undoButtonC);
+
+    const clearButtonC = document.createElement('button');
+    clearButtonC.setAttribute('id','clearButton'); clearButtonC.setAttribute('class','stroke-color');
+    clearButtonC.setAttribute('onclick','drawClear()');
+    clearButtonC.innerHTML="C";
+    divtoolC.appendChild(clearButtonC);
+
+    const c1ButtonC = document.createElement('button');
+    c1ButtonC.setAttribute('id','color1'); c1ButtonC.setAttribute('class','stroke-color');
+    c1ButtonC.setAttribute('style','background:black'); c1ButtonC.setAttribute('onclick','drawColor(1)');
+    divtoolC.appendChild(c1ButtonC);
+
+    const c2ButtonC = document.createElement('button');
+    c2ButtonC.setAttribute('id','color2'); c2ButtonC.setAttribute('class','stroke-color');
+    c2ButtonC.setAttribute('style','background:red'); c2ButtonC.setAttribute('onclick','drawColor(2)');
+    divtoolC.appendChild(c2ButtonC);
+
+    const c3ButtonC = document.createElement('button');
+    c3ButtonC.setAttribute('id','color3'); c3ButtonC.setAttribute('class','stroke-color');
+    c3ButtonC.setAttribute('style','background:yellow'); c3ButtonC.setAttribute('onclick','drawColor(3)');
+    divtoolC.appendChild(c3ButtonC);
+
+    const c4ButtonC = document.createElement('button');
+    c4ButtonC.setAttribute('id','color4'); c4ButtonC.setAttribute('class','stroke-color');
+    c4ButtonC.setAttribute('style','background:green'); c4ButtonC.setAttribute('onclick','drawColor(4)');
+    divtoolC.appendChild(c4ButtonC);
+
+    const c5ButtonC = document.createElement('button');
+    c5ButtonC.setAttribute('id','color5'); c5ButtonC.setAttribute('class','stroke-color');
+    c5ButtonC.setAttribute('style','background:blue'); c5ButtonC.setAttribute('onclick','drawColor(5)');
+    divtoolC.appendChild(c5ButtonC);
+
+    const c6ButtonC = document.createElement('button');
+    c6ButtonC.setAttribute('id','color6'); c6ButtonC.setAttribute('class','stroke-color');
+    c6ButtonC.setAttribute('style','background:white'); c6ButtonC.setAttribute('onclick','drawColor(6)');
+    divtoolC.appendChild(c6ButtonC);
+
+} //function createPentool()
+
+function pentool(action) {
+    if (action=="show") {
+        //deblog ("show pane");
+        document.getElementById("pentool").className = "unhiddenTool";
+        isPenToolHidden=false;
+    } //if (action=="show")
+    if (action=="hide") {
+        //deblog ("show pane");
+        document.getElementById("pentool").className = "hiddenTool";
+        isPenToolHidden=true;
+    } //if (action=="show")
+} //function toggleShowPentool
+
+function drawRestore() { parent.postMessage("undoDraw","*"); } //drawRestore()
+function drawClear() { parent.postMessage("clearDraw","*"); } //drawClear()
+function drawColor(colorInt) { 
+        var intMsg="color"+colorInt;
+        //deblog (intMsg);
+        parent.postMessage(intMsg,"*"); 
+} //drawColor()
+
+//}}} draw functions
 
 //{{{helper functions
 
@@ -335,6 +519,7 @@ function delay(n) {
                         }, n);
             });
 }//function delay()
+
 
 function deblog(msgLog) {
     if (isDebug) console.log(msgLog);

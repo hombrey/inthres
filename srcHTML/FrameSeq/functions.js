@@ -26,20 +26,28 @@ function evalMessage (evnt) {
     //console.log ("message received");
 
     switch (data) {
-      case "FocusSeq" : document.getElementById('seqSelect').focus(); break;
-      case "FocusTool" : document.getElementById('toolSelect').focus(); break;
+      case "FocusSeq" : document.getElementById('seqSelect').focus(); 
+                        initDrawCanvas();
+                        break;
+      case "FocusTool": document.getElementById('toolSelect').focus(); 
+                        initDrawCanvas();
+                        break;
+      case "draw"     : initDrawCanvas();
+                        canvas.className = "canvasKeepTap"; isWBdark=false;
+                        break;
+      case "noDraw"   : closeDraw();
+                        break;
+      case "color1": change_color_kb("black"); stroke_width = "40";break;
+      case "color2": change_color_kb("red"); stroke_width = "2";break;
+      case "color3": change_color_kb("yellow"); stroke_width = "2"; break;
+      case "color4": change_color_kb("green"); stroke_width = "2"; break;
+      case "color5": change_color_kb("blue"); stroke_width = "2"; break;
+      case "color6": change_color_kb("white"); stroke_width = "40"; break;
+      case "undoDraw": Restore(); break;
+      case "clearDraw": Clear(); break;
       default : return;
     } //switch (data)
 
-    canvas.addEventListener("touchstart", start, false);
-    canvas.addEventListener("touchmove", draw, false);
-    canvas.addEventListener("touchend", stop, false);
-    canvas.addEventListener("mousedown", start, false);
-    canvas.addEventListener("mousemove", draw, false);
-    canvas.addEventListener("mouseup", stop, false);
-    canvas.addEventListener("mouseout", stop, false);
-    window.addEventListener("keydown", drawKeys, false);
-    canvas.className = "canvasTap";
 
 } //function evalMessage(event)
 
@@ -96,87 +104,27 @@ async function initWin() {
         canvas.setAttribute("id","canvas");
         document.body.appendChild(canvas);
 
-        const divtoolC = document.createElement('div');
-        divtoolC.setAttribute('id','pentool');
-        divtoolC.setAttribute('class','hiddenTool');
-        document.body.appendChild(divtoolC);
-
-        const undoButtonC = document.createElement('button');
-        undoButtonC.setAttribute('id','undoButton'); undoButtonC.setAttribute('class','stroke-color');
-        undoButtonC.setAttribute('onclick','Restore()');
-        undoButtonC.innerHTML="Z";
-        divtoolC.appendChild(undoButtonC);
-
-        const clearButtonC = document.createElement('button');
-        clearButtonC.setAttribute('id','clearButton'); clearButtonC.setAttribute('class','stroke-color');
-        clearButtonC.setAttribute('onclick','Clear()');
-        clearButtonC.innerHTML="C";
-        divtoolC.appendChild(clearButtonC);
-
-        const c1ButtonC = document.createElement('button');
-        c1ButtonC.setAttribute('id','color1'); c1ButtonC.setAttribute('class','stroke-color');
-        c1ButtonC.setAttribute('style','background:black'); c1ButtonC.setAttribute('onclick','change_color(this)');
-        c1ButtonC.innerHTML="\u{2191}1";
-        divtoolC.appendChild(c1ButtonC);
-
-        const c2ButtonC = document.createElement('button');
-        c2ButtonC.setAttribute('id','color2'); c2ButtonC.setAttribute('class','stroke-color');
-        c2ButtonC.setAttribute('style','background:red'); c2ButtonC.setAttribute('onclick','change_color(this)');
-        c2ButtonC.innerHTML="\u{2191}2";
-        divtoolC.appendChild(c2ButtonC);
-
-        const c3ButtonC = document.createElement('button');
-        c3ButtonC.setAttribute('id','color3'); c3ButtonC.setAttribute('class','stroke-color');
-        c3ButtonC.setAttribute('style','background:yellow'); c3ButtonC.setAttribute('onclick','change_color(this)');
-        c3ButtonC.innerHTML="\u{2191}3";
-        divtoolC.appendChild(c3ButtonC);
-
-        const c4ButtonC = document.createElement('button');
-        c4ButtonC.setAttribute('id','color4'); c4ButtonC.setAttribute('class','stroke-color');
-        c4ButtonC.setAttribute('style','background:green'); c4ButtonC.setAttribute('onclick','change_color(this)');
-        c4ButtonC.innerHTML="\u{2191}4";
-        divtoolC.appendChild(c4ButtonC);
-
-        const c5ButtonC = document.createElement('button');
-        c5ButtonC.setAttribute('id','color5'); c5ButtonC.setAttribute('class','stroke-color');
-        c5ButtonC.setAttribute('style','background:blue'); c5ButtonC.setAttribute('onclick','change_color(this)');
-        c5ButtonC.innerHTML="\u{2191}5";
-        divtoolC.appendChild(c5ButtonC);
-
-        const c6ButtonC = document.createElement('button');
-        c6ButtonC.setAttribute('id','color6'); c6ButtonC.setAttribute('class','stroke-color');
-        c6ButtonC.setAttribute('style','background:white'); c6ButtonC.setAttribute('onclick','change_color(this)');
-        c6ButtonC.innerHTML="\u{2191}6";
-        divtoolC.appendChild(c6ButtonC);
-
-        const inputC = document.createElement('input');
-        inputC.setAttribute('id','slider');
-        inputC.setAttribute('type','range');
-        inputC.setAttribute('value','2');
-        inputC.setAttribute('min','1');
-        inputC.setAttribute('max','100');
-        inputC.setAttribute('oninput','stroke_width = this.value');
-        divtoolC.appendChild(inputC);
+        createPentool();
 
         await delay (30);
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        context = canvas.getContext("2d");
+        context.fillStyle = "transparent";
+        context.fillRect(0, 0, canvas.width, canvas.height);
+
+        start_index = -1; //index for each "draw stroke". Used for undoing strokes
+        stroke_color = 'blue';
+        stroke_width = "2";
+        is_drawing = false;
     //END: create elements for drawing functionality
-
-    //canvas = document.getElementById("canvas");
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    context = canvas.getContext("2d");
-    context.fillStyle = "transparent";
-    context.fillRect(0, 0, canvas.width, canvas.height);
-
-    start_index = -1;
-    stroke_color = 'blue';
-    stroke_width = "2";
-    is_drawing = false;
 
     //prevent a-z keyboard strokes from selecting another iframe  
     let selectHandle = document.getElementById("seqSelect");
     selectHandle.setAttribute ('onkeydown','IgnoreAlpha(event);');
+    //explicitly selecting iframe from the dropdown switches to that iframe and sends the focus to it
     selectHandle.setAttribute ('onClick','focusSeqSource();');
 
     document.getElementById("seqSelect").focus(); //dummy select element that grabs the focus of the iframe
@@ -192,6 +140,8 @@ async function initWin() {
 
     toolHandle.add(songsOption);
 
+    initDrawCanvas();
+
 } //function initWin()
 
 //}}} initializations
@@ -203,15 +153,7 @@ function focusIframe() {
 
     childWindow.contentWindow.postMessage("FocusIframe","*"); 
 
-    canvas.removeEventListener("touchstart", start, false);
-    canvas.removeEventListener("touchmove", draw, false);
-    canvas.removeEventListener("touchend", stop, false);
-    canvas.removeEventListener("mousedown", start, false);
-    canvas.removeEventListener("mousemove", draw, false);
-    canvas.removeEventListener("mouseup", stop, false);
-    canvas.removeEventListener("mouseout", stop, false);
-    window.removeEventListener("keydown", drawKeys, false);
-    canvas.className = "canvasNoTap"; isWBdark=false;
+    closeDraw();
 
 } //function focusIframe()
 
@@ -231,6 +173,100 @@ async function focusSeqSource() {
 // }}} framer handling functions
 
 // {{{ draw functions
+function createPentool() {
+
+    const divtoolC = document.createElement('div');
+    divtoolC.setAttribute('id','pentool');
+    divtoolC.setAttribute('class','hiddenTool');
+    document.body.appendChild(divtoolC);
+
+    const undoButtonC = document.createElement('button');
+    undoButtonC.setAttribute('id','undoButton'); undoButtonC.setAttribute('class','stroke-color');
+    undoButtonC.setAttribute('onclick','Restore()');
+    undoButtonC.innerHTML="Z";
+    divtoolC.appendChild(undoButtonC);
+
+    const clearButtonC = document.createElement('button');
+    clearButtonC.setAttribute('id','clearButton'); clearButtonC.setAttribute('class','stroke-color');
+    clearButtonC.setAttribute('onclick','Clear()');
+    clearButtonC.innerHTML="C";
+    divtoolC.appendChild(clearButtonC);
+
+    const c1ButtonC = document.createElement('button');
+    c1ButtonC.setAttribute('id','color1'); c1ButtonC.setAttribute('class','stroke-color');
+    c1ButtonC.setAttribute('style','background:black'); c1ButtonC.setAttribute('onclick','change_color(this)');
+    c1ButtonC.innerHTML="\u{2191}1";
+    divtoolC.appendChild(c1ButtonC);
+
+    const c2ButtonC = document.createElement('button');
+    c2ButtonC.setAttribute('id','color2'); c2ButtonC.setAttribute('class','stroke-color');
+    c2ButtonC.setAttribute('style','background:red'); c2ButtonC.setAttribute('onclick','change_color(this)');
+    c2ButtonC.innerHTML="\u{2191}2";
+    divtoolC.appendChild(c2ButtonC);
+
+    const c3ButtonC = document.createElement('button');
+    c3ButtonC.setAttribute('id','color3'); c3ButtonC.setAttribute('class','stroke-color');
+    c3ButtonC.setAttribute('style','background:yellow'); c3ButtonC.setAttribute('onclick','change_color(this)');
+    c3ButtonC.innerHTML="\u{2191}3";
+    divtoolC.appendChild(c3ButtonC);
+
+    const c4ButtonC = document.createElement('button');
+    c4ButtonC.setAttribute('id','color4'); c4ButtonC.setAttribute('class','stroke-color');
+    c4ButtonC.setAttribute('style','background:green'); c4ButtonC.setAttribute('onclick','change_color(this)');
+    c4ButtonC.innerHTML="\u{2191}4";
+    divtoolC.appendChild(c4ButtonC);
+
+    const c5ButtonC = document.createElement('button');
+    c5ButtonC.setAttribute('id','color5'); c5ButtonC.setAttribute('class','stroke-color');
+    c5ButtonC.setAttribute('style','background:blue'); c5ButtonC.setAttribute('onclick','change_color(this)');
+    c5ButtonC.innerHTML="\u{2191}5";
+    divtoolC.appendChild(c5ButtonC);
+
+    const c6ButtonC = document.createElement('button');
+    c6ButtonC.setAttribute('id','color6'); c6ButtonC.setAttribute('class','stroke-color');
+    c6ButtonC.setAttribute('style','background:white'); c6ButtonC.setAttribute('onclick','change_color(this)');
+    c6ButtonC.innerHTML="\u{2191}6";
+    divtoolC.appendChild(c6ButtonC);
+
+    const inputC = document.createElement('input');
+    inputC.setAttribute('id','slider');
+    inputC.setAttribute('type','range');
+    inputC.setAttribute('value','2');
+    inputC.setAttribute('min','1');
+    inputC.setAttribute('max','100');
+    inputC.setAttribute('oninput','stroke_width = this.value');
+    divtoolC.appendChild(inputC);
+} //function createPentool()
+
+function initDrawCanvas() {
+
+    canvas.addEventListener("touchstart", start, false);
+    canvas.addEventListener("touchmove", draw, false);
+    canvas.addEventListener("touchend", stop, false);
+    canvas.addEventListener("mousedown", start, false);
+    canvas.addEventListener("mousemove", draw, false);
+    canvas.addEventListener("mouseup", stop, false);
+    canvas.addEventListener("mouseout", stop, false);
+    window.addEventListener("keydown", drawKeys, false);
+    canvas.className = "canvasTap";
+
+} //function initDrawCanvas()
+
+function closeDraw() {
+    canvas.removeEventListener("touchstart", start, false);
+    canvas.removeEventListener("touchmove", draw, false);
+    canvas.removeEventListener("touchend", stop, false);
+    canvas.removeEventListener("mousedown", start, false);
+    canvas.removeEventListener("mousemove", draw, false);
+    canvas.removeEventListener("mouseup", stop, false);
+    canvas.removeEventListener("mouseout", stop, false);
+    window.removeEventListener("keydown", drawKeys, false);
+    canvas.className = "canvasNoTap"; isWBdark=false;
+
+    //console.log ("hide color pallete pane");
+    document.getElementById("pentool").className = "hiddenTool";
+    IsColorPaneHidden=true;
+} //function closeDraw()
 
 function toggleWB() {
     if (isWBdark) {
