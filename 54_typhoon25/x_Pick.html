@@ -47,7 +47,7 @@
         //{{{eval keys
         function evalKeyDown(evnt) {
             let keyPressed = evnt.keyCode;
-            console.log ("Pressed:", keyPressed);
+            //console.log ("Pressed:", keyPressed);
             switch (keyPressed) {
                case 190 : evnt.preventDefault(); movePiece(); break;//key: period
                 case 65 : if(!event.shiftKey) selectPiece(1); else placePiece(1); break; //key: a

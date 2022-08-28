@@ -20,13 +20,31 @@ let wavSet;
 let isCanvasVisible=false;
 let isPaused=true;
 let playRate = 1;
+let isPenToolHidden=true;
+let helpHandle;
 //}}}variable declarations
 
 //{{{event listeners
 window.onload = initWin();
 window.addEventListener("resize", initWin);
 window.addEventListener("keydown", evalKeyDown, false); //capture keypress on bubbling (false) phase
+window.addEventListener("keyup", evalKeyUp, false); //capture keypress on bubbling (false) phase
 
+function evalKeyUp(evnt) {
+    let keyReleased = evnt.keyCode;
+    switch (keyReleased) {
+        case 8 : evnt.preventDefault();
+                 if(!event.shiftKey) {
+                     parent.postMessage("draw","*"); 
+                     pentool("hide");
+                 } else { parent.postMessage("noDraw","*"); 
+                     pentool("hide");
+                 } //if shiftkeya; 
+                 break; //key: <backspace>
+        case 112  : evnt.preventDefault(); helpHandle.className="hiddenHelp"; break; //key: F1
+        default : return;
+    } //switch (keyPressed)
+}//evalKeyUp
 function evalKeyDown(evnt) {
     let keyPressed = evnt.keyCode;
     //console.log ("keyUp: ",keyPressed);
@@ -51,21 +69,14 @@ function evalKeyDown(evnt) {
                   else changeHole (5.0625);
                   break; //key: right
        case 37  : changeHole(0.666); break; //key: left
-    //case 219 : evnt.preventDefault();
-                //playRate -= rateIncValue;
-                //if (playRate < 0.1) playRate = 0.1;
-                //playRate = parseFloat(playRate.toFixed(2));
-                //wavSet[picSet[imgIndex].wav].playbackRate = playRate;
-                ////if (osdTimeout > 0) showOSD(wavSet[picSet[imgIndex].wav].playbackRate);
-                //break; //'['
-    //case 221 : evnt.preventDefault();
-                //playRate += rateIncValue;
-                //if (playRate > 16) playRate = 16;
-                //playRate = parseFloat(playRate.toFixed(2));
-                //wavSet[picSet[imgIndex].wav].playbackRate = playRate;
-                ////if (osdTimeout > 0) showOSD(wavSet[picSet[imgIndex].wav].playbackRate);
-                //break; // ']'
        case 32  : evnt.preventDefault(); togglePlay() ;break; //key: <spacebar>
+       case 112  : evnt.preventDefault(); helpHandle.className="unhiddenHelp"; break; //key: F1
+
+        case 8 : evnt.preventDefault(); 
+                    parent.postMessage("noDraw","*"); 
+                    pentool("show");
+                break; //key: <backspace>
+
         default : return;
     } //switch (keyPressed)
 } //evalKey(event)
@@ -137,6 +148,9 @@ async function initWin() {
 
     initArrays(); 
     picSet[0].wav = 0;
+
+    createHelpWindow();
+    createPentool();
 
     pauseIndicator = document.getElementById('pauseIndicator');
     //document.getElementById("dummy").focus(); //dummy select element that grabs the focus of the iframe
@@ -248,7 +262,90 @@ function togglePlay() {
 } //function togglePlay()
 //}}}handler functions
 
+//{{{draw functions
+function createPentool() {
+
+    const divtoolC = document.createElement('div');
+    divtoolC.setAttribute('id','pentool');
+    divtoolC.setAttribute('class','hiddenTool');
+    document.body.appendChild(divtoolC);
+
+    const undoButtonC = document.createElement('button');
+    undoButtonC.setAttribute('id','undoButton'); undoButtonC.setAttribute('class','stroke-color');
+    undoButtonC.setAttribute('onclick','drawRestore()');
+    undoButtonC.innerHTML="Z";
+    divtoolC.appendChild(undoButtonC);
+
+    const clearButtonC = document.createElement('button');
+    clearButtonC.setAttribute('id','clearButton'); clearButtonC.setAttribute('class','stroke-color');
+    clearButtonC.setAttribute('onclick','drawClear()');
+    clearButtonC.innerHTML="C";
+    divtoolC.appendChild(clearButtonC);
+
+    const c1ButtonC = document.createElement('button');
+    c1ButtonC.setAttribute('id','color1'); c1ButtonC.setAttribute('class','stroke-color');
+    c1ButtonC.setAttribute('style','background:black'); c1ButtonC.setAttribute('onclick','drawColor(1)');
+    divtoolC.appendChild(c1ButtonC);
+
+    const c2ButtonC = document.createElement('button');
+    c2ButtonC.setAttribute('id','color2'); c2ButtonC.setAttribute('class','stroke-color');
+    c2ButtonC.setAttribute('style','background:red'); c2ButtonC.setAttribute('onclick','drawColor(2)');
+    divtoolC.appendChild(c2ButtonC);
+
+    const c3ButtonC = document.createElement('button');
+    c3ButtonC.setAttribute('id','color3'); c3ButtonC.setAttribute('class','stroke-color');
+    c3ButtonC.setAttribute('style','background:yellow'); c3ButtonC.setAttribute('onclick','drawColor(3)');
+    divtoolC.appendChild(c3ButtonC);
+
+    const c4ButtonC = document.createElement('button');
+    c4ButtonC.setAttribute('id','color4'); c4ButtonC.setAttribute('class','stroke-color');
+    c4ButtonC.setAttribute('style','background:green'); c4ButtonC.setAttribute('onclick','drawColor(4)');
+    divtoolC.appendChild(c4ButtonC);
+
+    const c5ButtonC = document.createElement('button');
+    c5ButtonC.setAttribute('id','color5'); c5ButtonC.setAttribute('class','stroke-color');
+    c5ButtonC.setAttribute('style','background:blue'); c5ButtonC.setAttribute('onclick','drawColor(5)');
+    divtoolC.appendChild(c5ButtonC);
+
+    const c6ButtonC = document.createElement('button');
+    c6ButtonC.setAttribute('id','color6'); c6ButtonC.setAttribute('class','stroke-color');
+    c6ButtonC.setAttribute('style','background:white'); c6ButtonC.setAttribute('onclick','drawColor(6)');
+    divtoolC.appendChild(c6ButtonC);
+
+} //function createPentool()
+
+function pentool(action) {
+    if (action=="show") {
+        //deblog ("show pane");
+        document.getElementById("pentool").className = "unhiddenTool";
+        isPenToolHidden=false;
+    } //if (action=="show")
+    if (action=="hide") {
+        //deblog ("show pane");
+        document.getElementById("pentool").className = "hiddenTool";
+        isPenToolHidden=true;
+    } //if (action=="show")
+} //function toggleShowPentool
+
+function drawRestore() { parent.postMessage("undoDraw","*"); } //drawRestore()
+function drawClear() { parent.postMessage("clearDraw","*"); } //drawClear()
+function drawColor(colorInt) { 
+        var intMsg="color"+colorInt;
+        //deblog (intMsg);
+        parent.postMessage(intMsg,"*"); 
+} //drawColor()
+
+//}}} draw functions
+
 //{{{helper functions
+function createHelpWindow() {
+    helpHandle = document.createElement('iframe');
+    helpHandle.setAttribute('id','myHelpFrame');
+    helpHandle.setAttribute('class','hiddenHelp');
+    helpHandle.setAttribute('src',srcDir+'help.html');
+    document.body.appendChild(helpHandle);
+} //function createHelpWindow()
+
 function sound(src) {
     this.sound = document.createElement("audio");
     this.sound.src = src;

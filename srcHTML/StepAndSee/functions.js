@@ -399,14 +399,6 @@ function toggleDieSpin() {
 //}}}handler functions
 
 //{{{draw functions
-function createHelpWindow() {
-    helpHandle = document.createElement('iframe');
-    helpHandle.setAttribute('id','myHelpFrame');
-    helpHandle.setAttribute('class','hiddenHelp');
-    helpHandle.setAttribute('src',sourceDir+'help.html');
-    document.body.appendChild(helpHandle);
-} //function createHelpWindow()
-
 function createPentool() {
 
     const divtoolC = document.createElement('div');
@@ -482,6 +474,13 @@ function drawColor(colorInt) {
 //}}} draw functions
 
 //{{{helper functions
+function createHelpWindow() {
+    helpHandle = document.createElement('iframe');
+    helpHandle.setAttribute('id','myHelpFrame');
+    helpHandle.setAttribute('class','hiddenHelp');
+    helpHandle.setAttribute('src',sourceDir+'help.html');
+    document.body.appendChild(helpHandle);
+} //function createHelpWindow()
 
 function sound(src) {
     this.sound = document.createElement("audio");

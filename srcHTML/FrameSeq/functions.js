@@ -8,6 +8,8 @@ let stroke_width;
 let is_drawing;
 let isWBdark=false;
 let IsColorPaneHidden=true;
+let sourceDir;
+let helpHandle;
 // }}} variables
 
 // {{{ event listeners
@@ -19,6 +21,15 @@ window.onload = initWin();
 window.addEventListener("resize", initWin);
 window.addEventListener('message', evalMessage);
 window.addEventListener("keydown", evalKeyDown, false); //capture keypress on bubbling (false) phase
+window.addEventListener("keyup", evalKeyUp, false); //capture keypress on bubbling (false) phase
+
+function evalKeyUp(evnt) {
+    let keyReleased = evnt.keyCode;
+    switch (keyReleased) {
+        case 112  : evnt.preventDefault(); helpHandle.className="hiddenHelp"; break; //key: F1
+        default : return;
+    } //switch (keyPressed)
+}//evalKeyUp
 
 function evalMessage (evnt) {
     // Get the sent data
@@ -60,6 +71,7 @@ function evalKeyDown(evnt) {
                   break; //key: w
        case 82  : window.location.reload(); 
                   break; //key: r
+        case 112  : evnt.preventDefault(); helpHandle.className="unhiddenHelp"; break; //key: F1
         default : return;
     } //switch (keyPressed)
 } //evalKey(event)
@@ -141,6 +153,15 @@ async function initWin() {
     toolHandle.add(songsOption);
 
     initDrawCanvas();
+
+    //extract sourceDir from location of the background iaage.
+    let bgX = document.getElementById('backgroundX');
+    let extString = bgX.src;
+    //if (extString.includes ("background.jpg") ) sourceDir = extString.replace ("background.jpg","");
+    //if (extString.includes ("backgroundAP.jpg") ) sourceDir = extString.replace ("backgroundAP.jpg","");
+    sourceDir= extString.split('/').slice(0, -1).join('/')+'/';  // remove last filename part of path
+
+    createHelpWindow();
 
 } //function initWin()
 
@@ -368,6 +389,14 @@ function Clear() {
 // }}} draw functions
 
 //{{{helper functions
+function createHelpWindow() {
+    helpHandle = document.createElement('iframe');
+    helpHandle.setAttribute('id','myHelpFrame');
+    helpHandle.setAttribute('class','hiddenHelp');
+    helpHandle.setAttribute('src',sourceDir+'help.html');
+    document.body.appendChild(helpHandle);
+} //function createHelpWindow()
+
 function IgnoreAlpha(e) {
   if (!e) { e = window.event; }
   if (e.keyCode >= 65 && e.keyCode <= 90) // A to Z

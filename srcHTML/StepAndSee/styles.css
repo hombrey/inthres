@@ -164,28 +164,32 @@ h3 {
 .hiddenHelp {
     position:fixed;
     visibility: hidden;
+    border: 0px;
     z-index: 4;
-    height: 60vh;
-    width: 25vw;
-    right: 10vw;
-    top: 10vh;
+    height: 80vh;
+    width: 40vw;
+    left: 30vw;
+    bottom: 0vh;
 } /*hiddenhelp*/
 
 .unhiddenHelp {
     position:fixed;
     visibility: visible;
+    border: 0px;
     z-index: 4;
-    height: 60vh;
-    width: 25vw;
-    right: 10vw;
-    top: 10vh;
+    height: 80vh;
+    width: 40vw;
+    left: 30vw;
+    bottom: 0vh;
 } /*unhiddenHelp*/
 
 #helpdiv {
-  height: 100%;
+  /*height: 100%;*/
+  position: fixed;
+  bottom: 0vh;
   width : 100%;
   background-color: black;
-  opacity: 0.7;
+  opacity: 0.8;
 } /*.helpdiv*/
 
 .helpkeys {
@@ -198,7 +202,9 @@ h3 {
 
 #helptable {
     width: 100%;
+    /*bottom: 0vh;*/
     color: white;
+    font-size: 1.2em;
 } /*.helpheader*/
 
 /*}}}helptool*/
