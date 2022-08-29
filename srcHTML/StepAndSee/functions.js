@@ -13,6 +13,9 @@ let tokens;
 let activeTokens;
 let steps;
 let stepMax, tokenMax;
+let mats;
+let matID;
+let matNow=0,matMax;
 let boardx,boardy; //unscaled
 let boardX,boardY; //scaled
 let boardW, boardH;
@@ -70,8 +73,10 @@ function evalKeyDown(evnt) {
         case 53 : selectToken("pick",5); break; //key: 5
         //case 39 : stepToken(tokenNow,1); break; //key: right
         //case 37 : stepToken(tokenNow,-1); break; //key: left
-        //case 40 : selectToken("next",1); break; //key: <down>
         //case 38 : selectToken("next",-1); break; //key: <up>
+        //case 40 : selectToken("next",1); break; //key: <down>
+        case 38  : setMat(matNow-1); break; //key: <up>
+        case 40  : setMat(matNow+1); break; //key: <down>
         case 83 : if(!event.shiftKey) stepToken(tokenNow,1); 
                   if(event.shiftKey) stepToken(tokenNow,-1); 
                   break; //key: s
@@ -127,6 +132,7 @@ async function initWin() {
     checkElement('backgroundX').then((selector) => { console.log(selector); });
     //Get a reference to the canvas
     bgX = document.getElementById('backgroundX');
+    matID = document.getElementById('matID');
 
     scaleX = bgX.clientWidth/bgX.naturalWidth;
     scaleY = bgX.clientHeight/bgX.naturalHeight;
@@ -188,6 +194,9 @@ async function initWin() {
 
    } //for (let tInx=1; sInx<tokenMax+1; tInx++)
 
+    placeMats();
+    setMat(1); 
+
         optionHandle = document.getElementById('optionText');
 
     createHelpWindow();
@@ -218,6 +227,18 @@ function clickToken(clicked_id) {
     selectToken("pick",extractIdNum);
 } //selectToken(action,tokenInt)
 
+function setMat (intMat) {
+
+    matNow=intMat;
+    if (matNow<1) matNow = matMax;
+    else if (matNow>matMax) matNow = 1;
+    let imgSrc =(assetDir+"3_mat/"+mats[matNow]);
+
+    //deblog ("imgSrc: "+imgSrc);
+    matID.src = imgSrc;
+
+    //console.log("image: "+picSet[imgIndex].src);
+} //function setMat (intMat)
 function activateToken () {
     for (let tInx=1; tInx<=tokenMax; tInx++) {
         

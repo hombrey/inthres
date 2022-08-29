@@ -13,9 +13,18 @@
     <div id="assetdir" style="display:none">./</div>
 
     <img class="fullPage" id="backgroundX" src="../srcHTML/StepAndSee/img/BG0.png">
+    <img class="fullPage" id="matID" src="../srcHTML/StepAndSee/img/BG0.png">
     <img class="dieClass" id="die1" onClick="toggleDieSpin()" src="../srcHTML/StepAndSee/img/die0.webp">
     <select class="selectBox" id="dummy"><option id="optionText">StepAndSee</option></select>
     <script src="../srcHTML/StepAndSee/functions.js"></script> 
+    <script> 
+      function placeMats() {
+          mats = [ "index0",
+               "null.webp",
+          ];
+          matMax = mats.length-1;
+      } // function placeMats()
+    </script> 
 
     <img class="fullPage"   id="backboard"                             src="./backboard.webp">
     <img class="tokenClass" id="token1" onClick="clickToken(this.id)" src="./1_token/1.webp">

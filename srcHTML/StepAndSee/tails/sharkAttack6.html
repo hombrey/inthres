@@ -1,30 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title></title> 
-    <meta name="description" content"">
-    <meta name="author" content="Hombrey">
-    <link rel="stylesheet" href="../srcHTML/StepAndSee/styles.css">
-</head>
 
-<body id="myBody">
-    <div id="srcdir" style="display:none;">../srcHTML/StepAndSee/</div>
-    <div id="assetdir" style="display:none">./</div>
-
-    <img class="fullPage" id="backgroundX" src="../srcHTML/StepAndSee/img/BG0.png">
-    <img class="fullPage" id="matID" src="../srcHTML/StepAndSee/img/BG0.png">
-    <img class="dieClass" id="die1" onClick="toggleDieSpin()" src="../srcHTML/StepAndSee/img/die0.webp">
-    <select class="selectBox" id="dummy"><option id="optionText">StepAndSee</option></select>
-    <script src="../srcHTML/StepAndSee/functions.js"></script> 
-    <script> 
-      function placeMats() {
-          mats = [ "index0",
-               "null.webp",
-          ];
-          matMax = mats.length-1;
-      } // function placeMats()
-    </script> 
 
     <img class="fullPage"   id="backboard"                             src="./backboard.webp">
     <img class="tokenClass" id="token1" onClick="clickToken(this.id)" src="./1_token/1.webp">
@@ -40,9 +14,6 @@
     <img class="stepClass" id="step4" onClick="clickStep(this.id)" src="./2a_step/4.webp">
     <img class="stepClass" id="step5" onClick="clickStep(this.id)" src="./2a_step/5.webp">
     <img class="stepClass" id="step6" onClick="clickStep(this.id)" src="./2a_step/6.webp">
-    <img class="stepClass" id="step7" onClick="clickStep(this.id)" src="./2a_step/7.webp">
-    <img class="stepClass" id="step8" onClick="clickStep(this.id)" src="./2a_step/8.webp">
-    <img class="stepClass" id="step9" onClick="clickStep(this.id)" src="./2a_step/9.webp">
 
 
     <script>
@@ -50,11 +21,12 @@
 //{{{ define steps,die and tokens
     function arrangeBoard() {
 
+        //A die isn't needed with this tail. It's placed off-screen.
         theDie = document.getElementById('die1');
-        theDie.placex = 1000;
-        theDie.placey = 530;
-        theDie.maxDie = 3;
-        theDie.auto = true;
+        theDie.placex = -575;
+        theDie.placey = -475;
+        theDie.maxDie = 1;
+        theDie.auto = false;
 
         tokens = [  document.getElementById('token1'), //index 0 dummy
                     document.getElementById('token1'),document.getElementById('token2'),
@@ -68,46 +40,44 @@
         //array of activated tokens. Actual size of array can be bigger than the number of elements of tokens array
         activeTokens = [0,0,0,0,0,0,0,0,0];
 
-        tokens[1].offx = 40;
-        tokens[1].offy = 25; 
+        tokens[1].offx = -11;
+        tokens[1].offy = -115; 
         tokens[1].onStep = 0;
         tokens[1].prompt = new sound(assetDir+"wav/1/token1.mp3");
 
-        tokens[2].offx = 125;
-        tokens[2].offy = 100; 
+        tokens[2].offx = -1;
+        tokens[2].offy = -115; 
         tokens[2].onStep = 0;
         tokens[2].prompt = new sound(assetDir+"wav/1/token2.mp3");
 
-        tokens[3].offx = 125;
-        tokens[3].offy = 40; 
+        tokens[3].offx = 12;
+        tokens[3].offy = -118; 
         tokens[3].onStep = 0;
         tokens[3].prompt = new sound(assetDir+"wav/1/token3.mp3");
 
-        tokens[4].offx = 70;
-        tokens[4].offy = 80; 
+        tokens[4].offx = 25;
+        tokens[4].offy = -117; 
         tokens[4].onStep = 0;
         tokens[4].prompt = new sound(assetDir+"wav/1/token4.mp3");
 
-        tokens[5].offx = 30;
-        tokens[5].offy = 130; 
+        tokens[5].offx = 43;
+        tokens[5].offy = -119; 
         tokens[5].onStep = 0;
         tokens[5].prompt = new sound(assetDir+"wav/1/token5.mp3");
 
         steps = [  document.getElementById('step0'), //index 0
                     document.getElementById('step1'),document.getElementById('step2'),
                     document.getElementById('step3'),document.getElementById('step4'),
-                    document.getElementById('step5'),document.getElementById('step6'),
-                    document.getElementById('step7'),document.getElementById('step8'),
-                    document.getElementById('step9')
+                    document.getElementById('step5'),document.getElementById('step6')
         ]; //steps =[]
         stepMax = steps.length-1;
         //deblog ("max steps: "+stepMax);
 
-        boardx = 50; boardy = 60;
-        stepw = 200; steph = 200;
+        boardx = 20; boardy = 130;
+        stepw = 90; steph = 75;
 
         steps[0].posx = -20; //step zero is off-screen
-        steps[0].posy = 0; 
+        steps[0].posy = -20; 
         steps[0].angle = 0; 
         steps[0].prompt = new sound(assetDir+"wav/2a/step1.mp3");
 
@@ -117,44 +87,29 @@
         steps[1].prompt = new sound(assetDir+"wav/2a/step1.mp3");
 
         steps[2].posx = 1;
-        steps[2].posy = 0; 
+        steps[2].posy = 1; 
         steps[2].angle = 0; 
         steps[2].prompt = new sound(assetDir+"wav/2a/step2.mp3");
 
         steps[3].posx = 2;
-        steps[3].posy = 0; 
+        steps[3].posy = 2; 
         steps[3].angle = 0; 
         steps[3].prompt = new sound(assetDir+"wav/2a/step3.mp3");
 
         steps[4].posx = 3;
-        steps[4].posy = 0; 
+        steps[4].posy = 3; 
         steps[4].angle = 0; 
         steps[4].prompt = new sound(assetDir+"wav/2a/step4.mp3");
 
-        steps[5].posx = 3;
-        steps[5].posy = 1; 
+        steps[5].posx = 4;
+        steps[5].posy = 4; 
         steps[5].angle = 0; 
         steps[5].prompt = new sound(assetDir+"wav/2a/step5.mp3");
 
-        steps[6].posx = 3;
-        steps[6].posy = 2; 
+        steps[6].posx = 5;
+        steps[6].posy = 5; 
         steps[6].angle = 0; 
         steps[6].prompt = new sound(assetDir+"wav/2a/step6.mp3");
-
-        steps[7].posx = 2;
-        steps[7].posy = 2; 
-        steps[7].angle = 0; 
-        steps[7].prompt = new sound(assetDir+"wav/2a/step7.mp3");
-
-        steps[8].posx = 1;
-        steps[8].posy = 2; 
-        steps[8].angle = 0; 
-        steps[8].prompt = new sound(assetDir+"wav/2a/step8.mp3");
-
-        steps[9].posx = 0;
-        steps[9].posy = 2; 
-        steps[9].angle = 0; 
-        steps[9].prompt = new sound(assetDir+"wav/2a/step9.mp3");
 
     } //function stepsAndTokens
 //}}} define steps and tokens

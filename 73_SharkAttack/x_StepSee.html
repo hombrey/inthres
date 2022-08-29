@@ -13,9 +13,21 @@
     <div id="assetdir" style="display:none">./</div>
 
     <img class="fullPage" id="backgroundX" src="../srcHTML/StepAndSee/img/BG0.png">
+    <img class="fullPage" id="matID" src="../srcHTML/StepAndSee/img/BG0.png">
     <img class="dieClass" id="die1" onClick="toggleDieSpin()" src="../srcHTML/StepAndSee/img/die0.webp">
     <select class="selectBox" id="dummy"><option id="optionText">StepAndSee</option></select>
     <script src="../srcHTML/StepAndSee/functions.js"></script> 
+    <script> 
+      function placeMats() {
+          mats = [ "index0",
+               "word1.webp",
+               "word2.webp",
+               "word3.webp",
+          ];
+          matMax = mats.length-1;
+      } // function placeMats()
+    </script> 
+
 
     <img class="fullPage"   id="backboard"                             src="./backboard.webp">
     <img class="tokenClass" id="token1" onClick="clickToken(this.id)" src="./1_token/1.webp">
@@ -38,11 +50,12 @@
 //{{{ define steps,die and tokens
     function arrangeBoard() {
 
+        //A die isn't needed with this tail. It's placed off-screen.
         theDie = document.getElementById('die1');
         theDie.placex = -575;
         theDie.placey = -475;
-        theDie.maxDie = 3;
-        theDie.auto = true;
+        theDie.maxDie = 1;
+        theDie.auto = false;
 
         tokens = [  document.getElementById('token1'), //index 0 dummy
                     document.getElementById('token1'),document.getElementById('token2'),
