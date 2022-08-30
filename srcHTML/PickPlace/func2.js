@@ -10,6 +10,7 @@ let xAdj, yAdj;
 let assetDir,sourceDir;
 let isPenToolHidden=true;
 let helpHandle;
+let areAllHidden=false;
 //}}}variable declarations
 
 //{{{window init
@@ -260,13 +261,24 @@ function toggleHide() {
     } else {//if (pieces[pickedNum-1].show)
         pieces[pickedNum-1].src =assetDir+"1_front/"+pickedNum+".webp";
         pieces[pickedNum-1].show=true;
+        areAllHidden=false;
     } // else //if (pieces[pickedNum-1 ...
 } //function toggleHide()
 function hideAll() {
-    for (let pInx=1; pInx<pieces.length+1; pInx++) {
-        pieces[pInx-1].src =assetDir+"2_back/"+pInx+".webp";
-        pieces[pInx-1].show = false;
-    } //for (pInx=1; pInx=pieces.size+1; pInx+)
+    if (!areAllHidden) {
+        for (let pInx=1; pInx<pieces.length+1; pInx++) {
+            pieces[pInx-1].src =assetDir+"2_back/"+pInx+".webp";
+            pieces[pInx-1].show = false;
+        } //for (pInx=1; pInx=pieces.size+1; pInx+)
+        areAllHidden=true;
+    } else {
+        for (let pInx=1; pInx<pieces.length+1; pInx++) {
+            pieces[pInx-1].src =assetDir+"1_front/"+pInx+".webp";
+            pieces[pInx-1].show = true;
+        } //for (pInx=1; pInx=pieces.size+1; pInx+)
+        areAllHidden=false;
+    } // if (!areAllHidden)
+
 } //function hideAll()
 
 //}}}handler functions

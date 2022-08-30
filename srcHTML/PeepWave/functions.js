@@ -11,6 +11,8 @@ let hole = 75;
 let holeBorder = 800;
 let selColor = "black";
 let pickSound, jingSound, tingSound;
+let wavDoc;
+let isWavDocSet=false;
 let imgFill;
 let pattern;
 let assetDir,srcDir;
@@ -22,6 +24,7 @@ let isPaused=true;
 let playRate = 1;
 let isPenToolHidden=true;
 let helpHandle;
+let isMute=true;
 //}}}variable declarations
 
 //{{{event listeners
@@ -145,6 +148,12 @@ async function initWin() {
     tingSound = new sound(srcDir+"wav/ting.mp3");
     jingSound = new sound(srcDir+"wav/jing.mp3");
     pickSound = new sound(srcDir+"wav/pick.mp3");
+    wavDoc = new sound(srcDir+"wav/pick.mp3");
+    wavDoc.sound.onerror = function () {
+        wavDoc.sound.src = srcDir+"wav/pick.mp3";
+        pauseIndicator.style.display = "none";
+        isPaused = true;
+    } //wavDoc.onerror = function ()
 
     initArrays(); 
     picSet[0].wav = 0;
@@ -155,7 +164,10 @@ async function initWin() {
     pauseIndicator = document.getElementById('pauseIndicator');
     //document.getElementById("dummy").focus(); //dummy select element that grabs the focus of the iframe
 
-    muteScene(1);
+    //select first image without triggering the play() function
+    isMute=true;
+    nextScene(1);
+    isMute=false;
 } //function initWin()
 
 //}}}window init
@@ -206,24 +218,14 @@ function showAlt() {
 
     // stay on current scene if "alt" is not found
     bgX.onerror = function ()  {
-        muteScene(imgIndex);
+        isMute=true;
+        nextScene(imgIndex);
+        isMute=false;
     } //bgX.onerror = function () 
 
         tingSound.start();
 
 } //function showAlt()
-
-function muteScene(chosenIndx) {
-
-    imgIndex=chosenIndx;
-
-    if (imgIndex<1) imgIndex = picSet.length-2;
-    else if (imgIndex>picSet.length-2) imgIndex = 1;
-    
-    let imgSrc =(assetDir+picSet[imgIndex].src);
-
-    bgX.src = imgSrc;
-} //function muteScene(sceneNum)
 
 function nextScene(chosenIndx) {
     //stop associated audio whenever the picture changes. Do this only if ./wav directory is populated
@@ -240,25 +242,42 @@ function nextScene(chosenIndx) {
     let imgSrc =(assetDir+picSet[imgIndex].src);
 
     bgX.src = imgSrc;
-    if (isCanvasVisible) jingSound.start();
-            else pickSound.start();
+    if (!isMute) {
+        if (isCanvasVisible) jingSound.start(); else pickSound.start();
+    } //if (!muteScene)
+
+    isWavDocSet=false;
 } //function changeScene(sceneNum)
 
 function togglePlay() {
 
-    //console.log ("audio: "+wavSet[picSet[imgIndex].wav].sound.src);
+    if (!isWavDocSet) {
+        //use auto-generated wavSet array if there is a 1:1 match between images and mp3
+        if (wavSet.length == picSet.length)
+            //wavDoc=wavSet[picSet[imgIndex].wav];
+            wavDoc=wavSet[imgIndex];
+        else {
+        //try to load audio file with the same name as the image 
+            let imgBaseName = picSet[imgIndex].src.split('.').slice(0, -1).join();  // extract base name of the current image
+            wavDoc.sound.src="./wav/"+imgBaseName+".mp3";
+        } // else of wavSet.length check
+
+        isWavDocSet = true;
+    } //if isWavDocSet
+
     if (!isPaused) {
-        if (wavSet[picSet[imgIndex].wav]) pauseIndicator.style.display = "block";
+        pauseIndicator.style.display = "block";
         pauseIndicator.style.backgroundColor = "red";
-        wavSet[picSet[imgIndex].wav].pause(); 
+        wavDoc.pause(); 
         isPaused = true; 
         //console.log("pause");
     } else {
-        if (wavSet[picSet[imgIndex].wav]) pauseIndicator.style.display = "block";
+        pauseIndicator.style.display = "block";
         pauseIndicator.style.backgroundColor = "green";
-        wavSet[picSet[imgIndex].wav].play(); 
+        wavDoc.play(); 
         isPaused = false;
     } // if (isPaused)
+
 } //function togglePlay()
 //}}}handler functions
 

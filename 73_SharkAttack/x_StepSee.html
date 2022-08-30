@@ -43,6 +43,7 @@
     <img class="stepClass" id="step4" onClick="clickStep(this.id)" src="./2a_step/4.webp">
     <img class="stepClass" id="step5" onClick="clickStep(this.id)" src="./2a_step/5.webp">
     <img class="stepClass" id="step6" onClick="clickStep(this.id)" src="./2a_step/6.webp">
+    <img class="stepClass" id="step7" onClick="clickStep(this.id)" src="./2a_step/7.webp">
 
 
     <script>
@@ -97,7 +98,8 @@
         steps = [  document.getElementById('step0'), //index 0
                     document.getElementById('step1'),document.getElementById('step2'),
                     document.getElementById('step3'),document.getElementById('step4'),
-                    document.getElementById('step5'),document.getElementById('step6')
+                    document.getElementById('step5'),document.getElementById('step6'),
+                    document.getElementById('step7')
         ]; //steps =[]
         stepMax = steps.length-1;
         //deblog ("max steps: "+stepMax);
@@ -140,6 +142,10 @@
         steps[6].angle = 0; 
         steps[6].prompt = new sound(assetDir+"wav/2a/step6.mp3");
 
+        steps[7].posx = 6;
+        steps[7].posy = 6; 
+        steps[7].angle = 0; 
+        steps[7].prompt = new sound(assetDir+"wav/2a/step6.mp3");
     } //function stepsAndTokens
 //}}} define steps and tokens
 
