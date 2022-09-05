@@ -123,6 +123,13 @@ async function initWin() {
     //Get a reference to the canvas
     bgX = document.getElementById('backgroundX');
 
+        // stay on current scene if src image (likely from 'alt') is not found
+        bgX.onerror = function ()  {
+            isMute=true;
+            nextScene(imgIndex);
+            isMute=false;
+        } //bgX.onerror = function () 
+
     scaleX = bgX.clientWidth/bgX.naturalWidth;
     scaleY = bgX.clientHeight/bgX.naturalHeight;
 
@@ -216,12 +223,6 @@ function showAlt() {
     let imgSrc =(assetDir+"alt/"+picSet[imgIndex].src);
     bgX.src = imgSrc;
 
-    // stay on current scene if "alt" is not found
-    bgX.onerror = function ()  {
-        isMute=true;
-        nextScene(imgIndex);
-        isMute=false;
-    } //bgX.onerror = function () 
 
         tingSound.start();
 

@@ -24,6 +24,12 @@ body {
     margin: auto;
     overflow-x: hidden;
 } /*#happy*/
+.selectBox {
+    position: fixed;
+    overflow-x: hidden;
+    top: 0px;
+    left: 0px;
+} /*.selectBox*/
 /*}}}class*/
 
 /*{{{id selector*/

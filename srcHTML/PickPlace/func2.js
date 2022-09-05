@@ -10,13 +10,12 @@ let xAdj, yAdj;
 let assetDir,sourceDir;
 let isPenToolHidden=true;
 let helpHandle;
-let areAllHidden=false;
 //}}}variable declarations
 
 //{{{window init
 
 window.onload = initWin();
-window.addEventListener("resize", initWin);
+window.addEventListener("resize", scaleScreen);
 
 //make sure elements are loaded before proceeding
 const checkElement = async selector => {
@@ -43,13 +42,25 @@ async function initWin() {
     //Get a reference to the canvas
     bgX = document.getElementById('backgroundX');
     
+    placeLocations(); //define number of pieces and their unscaled positions here
+
+    await delay (50);
+    scaleScreen();
+
+    pickSound = new sound(sourceDir+"wav/pick.mp3");
+    cardSound = new sound(sourceDir+"wav/card.mp3");
+    //document.getElementById("dummy").focus(); //dummy select element that grabs the focus of the iframe
+
+     createHelpWindow();
+     createPentool();
+
+} //function init()
+
+function scaleScreen() {
+
     scaleX = bgX.clientWidth/bgX.naturalWidth;
     scaleY = bgX.clientHeight/bgX.naturalHeight;
     //console.log ("scale: ("+scaleX+","+scaleY+")");
-
-    await delay (90);
-
-    placeLocations(); //define number of pieces and their unscaled positions here
 
     for (let pInx=1; pInx<pieces.length+1; pInx++) {
         //console.log ("pInx: ",pInx);
@@ -73,14 +84,7 @@ async function initWin() {
         //console.log ("#piece"+pInx+"{left: "+ pieces[pInx-1].X +"px; top: "+ pieces[pInx-1].Y +"px;}");
     } //for (pInx=1; pInx=pieces.size+1; pInx+)
     
-    pickSound = new sound(sourceDir+"wav/pick.mp3");
-    cardSound = new sound(sourceDir+"wav/card.mp3");
-    //document.getElementById("dummy").focus(); //dummy select element that grabs the focus of the iframe
-
-     createHelpWindow();
-     createPentool();
-
-} //function init()
+} //function scaleScreen()
 
 //}}}window init
 
@@ -261,22 +265,26 @@ function toggleHide() {
     } else {//if (pieces[pickedNum-1].show)
         pieces[pickedNum-1].src =assetDir+"1_front/"+pickedNum+".webp";
         pieces[pickedNum-1].show=true;
-        areAllHidden=false;
     } // else //if (pieces[pickedNum-1 ...
 } //function toggleHide()
 function hideAll() {
-    if (!areAllHidden) {
-        for (let pInx=1; pInx<pieces.length+1; pInx++) {
+    let flipCount = 0;
+
+    //attempt to hide all pieces
+    for (let pInx=1; pInx<pieces.length+1; pInx++) {
+        if (pieces[pInx-1].show) {
             pieces[pInx-1].src =assetDir+"2_back/"+pInx+".webp";
             pieces[pInx-1].show = false;
-        } //for (pInx=1; pInx=pieces.size+1; pInx+)
-        areAllHidden=true;
-    } else {
+            flipCount++;
+        } //if (pieces[pInx-1].show)
+    } //for (pInx=1; pInx=pieces.size+1; pInx+)
+
+    //show all pieces if all were already hidden
+    if (flipCount==0) {
         for (let pInx=1; pInx<pieces.length+1; pInx++) {
             pieces[pInx-1].src =assetDir+"1_front/"+pInx+".webp";
             pieces[pInx-1].show = true;
         } //for (pInx=1; pInx=pieces.size+1; pInx+)
-        areAllHidden=false;
     } // if (!areAllHidden)
 
 } //function hideAll()

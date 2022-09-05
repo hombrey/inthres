@@ -18,7 +18,7 @@ let helpHandle;
 //document.body.appendChild(canvasC);
 
 window.onload = initWin();
-window.addEventListener("resize", initWin);
+window.addEventListener("resize", scaleScreen);
 window.addEventListener('message', evalMessage);
 window.addEventListener("keydown", evalKeyDown, false); //capture keypress on bubbling (false) phase
 window.addEventListener("keyup", evalKeyUp, false); //capture keypress on bubbling (false) phase
@@ -118,10 +118,10 @@ async function initWin() {
 
         createPentool();
 
-        await delay (30);
+        await delay (15);
 
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        //wait for elements to load before scaling
+        scaleScreen();
 
         context = canvas.getContext("2d");
         context.fillStyle = "transparent";
@@ -164,6 +164,13 @@ async function initWin() {
     createHelpWindow();
 
 } //function initWin()
+
+function scaleScreen() {
+
+    canvas.width = window.innerWidth;
+     canvas.height = window.innerHeight;
+
+} //function scaleScreen()
 
 //}}} initializations
 

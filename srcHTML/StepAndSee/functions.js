@@ -35,7 +35,7 @@ let helpHandle;
 
 //{{{event listeners
 window.onload = initWin();
-window.addEventListener("resize", initWin);
+window.addEventListener("resize", scaleScreen);
 window.addEventListener("keydown", evalKeyDown, false); //capture keypress on bubbling (false) phase
 window.addEventListener("keyup", evalKeyUp, false); //capture keypress on bubbling (false) phase
 
@@ -130,14 +130,7 @@ async function initWin() {
     await delay (20); 
     //check to see if element is loaded
     checkElement('backgroundX').then((selector) => { console.log(selector); });
-    //Get a reference to the canvas
-    bgX = document.getElementById('backgroundX');
-    matID = document.getElementById('matID');
-
-    scaleX = bgX.clientWidth/bgX.naturalWidth;
-    scaleY = bgX.clientHeight/bgX.naturalHeight;
-
-    await delay (100);
+    
 
     //defined in HTML
     //Get project source
@@ -146,7 +139,39 @@ async function initWin() {
     assetDir = document.getElementById("assetdir").innerHTML;
     //populate tokens and steps arrays and define unscaled step offsets
     arrangeBoard();
-    //
+   
+    //wait for sceen to populate before scaling
+    await delay (25);
+    scaleScreen();
+
+    placeMats();
+    setMat(1); 
+
+        optionHandle = document.getElementById('optionText');
+
+    createHelpWindow();
+
+    pickSound = new sound(sourceDir+"wav/pick.mp3");
+    placeSound = new sound(sourceDir+"wav/place.mp3");
+    cardSound = new sound(sourceDir+"wav/card.mp3");
+
+    createPentool();
+
+    //automatically call first token
+    isMute=true;
+    activateToken();
+    isMute=false;
+} //function initWin()
+
+function scaleScreen() {
+
+    //Get a reference to the canvas
+    bgX = document.getElementById('backgroundX');
+    matID = document.getElementById('matID');
+
+    scaleX = bgX.clientWidth/bgX.naturalWidth;
+    scaleY = bgX.clientHeight/bgX.naturalHeight;
+
     boardX = Math.round (scaleX*boardx);
     boardY = Math.round (scaleY*boardy);
     boardW = Math.round (scaleX*steps[1].naturalWidth);
@@ -186,32 +211,14 @@ async function initWin() {
         
         insertCss ("#token"+tInx+" {width: "+ tokens[tInx].W +"px; height: "+ tokens[tInx].H +"px;}");
 
-        //physically move all tokens outside the viewing area (they're all on step 0)
+        //physically move all tokens outside the viewing area (they're all on initially on step 0)
         insertCss ("#token"+tInx+"{"+
             " left: "+(steps[tokens[tInx].onStep].X+tokens[tInx].offx) +"px;"+
             " top: "+ (steps[tokens[tInx].onStep].Y+tokens[tInx].offy) +"px;"+
         "}"); //insertCss "#token"
 
    } //for (let tInx=1; sInx<tokenMax+1; tInx++)
-
-    placeMats();
-    setMat(1); 
-
-        optionHandle = document.getElementById('optionText');
-
-    createHelpWindow();
-
-    pickSound = new sound(sourceDir+"wav/pick.mp3");
-    placeSound = new sound(sourceDir+"wav/place.mp3");
-    cardSound = new sound(sourceDir+"wav/card.mp3");
-
-    createPentool();
-
-    //automatically call first token
-    isMute=true;
-    activateToken();
-    isMute=false;
-} //function initWin()
+} //function scaleScreen()
 
 //}}}initializations
 

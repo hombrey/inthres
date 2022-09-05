@@ -8,7 +8,10 @@ let sprite,spriteNum;
 let movX, movY;
 let jumpSound, fallSound, callSound, settleSound, winSound;
 let sourceDir;
+//let isCalled = false;
 let isCalled = false;
+let isMute=false;
+let nTab;
 ;//}}}variable declarations
 
 //{{{event listeners
@@ -20,13 +23,39 @@ function evalKey(evnt) {
     //console.log ("Pressed: ",keyPressed);
 
     switch (keyPressed) {
+       case 87  : if(!event.shiftKey) parent.postMessage("FocusSeq","*");
+                  else parent.postMessage("FocusTool","*"); 
+                  break; //key: w
+       case 82  : window.location.reload(); 
+                  break; //key: r
        case 48  : if (!isCalled)callKlyne();break; //key: 0
+       case 78  : if (!event.ctrlKey) duplNewTab();break; //key: n
        case 37  : if (isCalled) spriteJump("down"); break; //key: right
        case 39  : if (isCalled) spriteJump("up"); break; //key: left
        default  : return;
     } //switch (keyPressed)
 
 } //evalKey(event)
+
+window.addEventListener('message', evalMessage);
+function evalMessage (evnt) {
+    // Get the sent data
+    var data = evnt.data;
+    //console.log ("message received");
+
+    if (data == "FocusIframe") {
+        //console.log("focusDummy");
+        document.getElementById('dummy').focus();
+    }
+
+    if (data == "startMrK") {
+        isMute = true;
+        callKlyne(); 
+        isMute = false;
+    }
+
+} //function evalMessage(event)
+
 //}}}event listeners
 
 //{{{window init
@@ -40,7 +69,7 @@ const checkElement = async selector => {
 
 async function initWin() {
     //Get a reference to the canvas
-    //await delay (6);
+    await delay (6);
     //checkElement('backgroundX').then((selector) => { console.log(selector); });
 
     bgX = document.getElementById('backgroundX');
@@ -55,7 +84,8 @@ async function initWin() {
     //callSound = new sound(sourceDir+"wav/call.mp3");
     settleSound = new sound(sourceDir+"wav/settle.mp3");
     winSound = new sound(sourceDir+"wav/win.mp3");
-    
+    callSound = new sound(sourceDir+"wav/call.mp3");
+
 } //function init()
 
 function resizeElements() {
@@ -74,9 +104,17 @@ function animateLoop(timeStamp) {
 //}}}window init
 
 //{{{handler functions
+async function duplNewTab() {
+    nTab = window.open(sourceDir+'klyne.html','_blank');
+    if (!isMute) callSound.start();
+
+    await delay (30);
+    nTab.postMessage("startMrK", "*");
+
+} //function newTab()
+
 function callKlyne() {
-    callSound = new sound(sourceDir+"wav/call.mp3");
-    callSound.start();
+    if (!isMute) callSound.start();
     insertCss ("#guidemsg {display: none;}");
     insertCss (".spriteClass {display: block;}");
     bgX.src = (sourceDir+"img/BG1.jpg");
@@ -149,5 +187,14 @@ function insertCss( code ) {
 
     document.getElementsByTagName("head")[0].appendChild( style );
 } //function insertCss( code)
+
+function delay(n) {  
+        n = n || 2000;
+        return new Promise(done => {
+                setTimeout(() => {
+                        done();
+                        }, n);
+            });
+}//function delay()
 
 //}}}helper functions
