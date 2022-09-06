@@ -66,6 +66,7 @@ function evalKeyDown(evnt) {
        case 56  : nextScene(8); break; //key: 8
        case 38  : nextScene(imgIndex-1); break; //key: <up>
        case 40  : nextScene(imgIndex+1); break; //key: <down>
+       case 83  : stepToLast(); break; //key: s
        case 190 : toggleCanvas(); break; //key: <period> to show/hide pattern
        case 188 : showAlt(); break; //key: <comma> to show alt image
        case 39  : if(!event.shiftKey) changeHole(1.5);
@@ -219,6 +220,7 @@ function toggleCanvas() {
    } //if (isCanvasVisible)
    pickSound.start();
 } //function toggleCanvass
+
 function showAlt() {
     let imgSrc =(assetDir+"alt/"+picSet[imgIndex].src);
     bgX.src = imgSrc;
@@ -248,7 +250,21 @@ function nextScene(chosenIndx) {
     } //if (!muteScene)
 
     isWavDocSet=false;
+
+    //display image name and index
+    let StatusText=imgIndex+"/"+(picSet.length-2);
+    if (imgIndex == 1) StatusText+=": PeepWave";
+        else StatusText+=": "+picSet[imgIndex].src;
+
+    document.getElementById('dummy').options[0].innerHTML=StatusText;
 } //function changeScene(sceneNum)
+
+async function stepToLast() {
+    let nextImg=imgIndex+1;
+    if (nextImg>picSet.length-2) nextImg=picSet.length-2;
+    nextScene(nextImg); 
+
+} //async function stepToLast()
 
 function togglePlay() {
 

@@ -108,7 +108,7 @@ async function duplNewTab() {
     nTab = window.open(sourceDir+'klyne.html','_blank');
     if (!isMute) callSound.start();
 
-    await delay (30);
+    await delay (150);
     nTab.postMessage("startMrK", "*");
 
 } //function newTab()

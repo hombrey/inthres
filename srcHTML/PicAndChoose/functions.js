@@ -16,6 +16,7 @@ let isPicFullScreen=false;
 let angleImg=0;
 let isPenToolHidden=true;
 let helpHandle;
+let isMute=true;
 //}}}variable declarations
 
 //{{{class declarations
@@ -64,6 +65,7 @@ function evalKeyDown(evnt) {
         case 52 : evalChosen(4); break; //key: 4
         case 39 : rotatePiece(90);break; //key: right
         case 37 : rotatePiece(-90);break; //key: left
+       case 83  : stepToLast(); break; //key: s
         case 38 : viewNextImg(-1); 
                   break; //key: <up>
         case 40 : viewNextImg(1); 
@@ -173,7 +175,22 @@ function viewNextImg(inc) {
     mainImg.style.transform="rotate( 0deg)";
     pickSound.start();
     mainImg.src = imgSrc;
+    //
+    //display image name and index
+    let StatusText=(imgIndex+1)+"/"+(promptSet.length-1);
+    StatusText+=": "+promptSet[imgIndex].txt;
+    document.getElementById('dummy').options[0].innerHTML=StatusText;
+
 } //function vewNextImg(inc)
+
+async function stepToLast() {
+
+    imgIndex++;
+    if (promptSet[imgIndex].txt=="") imgIndex--;
+    viewNextImg(0); 
+
+} //async function stepToLast()
+
 function rotatePiece(rotation) {
     cardSound.start();
     angleImg+=rotation;
